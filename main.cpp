@@ -4,6 +4,10 @@
 
 using namespace std;
 
+int numOfVars = 0;
+int numOfClauses = 0;
+
+
 int main () {
 
     string fileName = "001_count4_2_s.cnf";
