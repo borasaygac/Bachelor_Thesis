@@ -14,7 +14,8 @@
                 "main.exe",
                 "main.cpp",
                 "parse.cpp",
-                "variable.cpp"
+                "variable.cpp",
+                "clause.cpp"
             ],
             "options": {
                 "cwd": "" // defaults to root 
