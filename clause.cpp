@@ -13,6 +13,7 @@ Clause::~Clause(){
 
 void Clause::clauseAddElem(int v){
     this -> elements.push_back(vars[v]);
+    //TODO: Fix this
 }
 
 
