@@ -11,6 +11,8 @@ vector<Variable> vars;
 vector<Clause> clauses;
 vector<vector<int>> cnf;
 
+// TODO: Make sure horn fucntions work and the data between clause and vars is synced
+
 int main () {
 
     string fileName = "001_count4_2_s.cnf";
