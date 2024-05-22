@@ -41,11 +41,20 @@ bool parseDIMACS(std::string filename)
         printf("Number of clauses: %i\n", numOfClauses);
 
         // Parse operations for the rest of the formula
-        vector<Variable> vars(numOfVars + 1);
+
+        vars.resize(numOfVars + 1);
+        clauses.resize(numOfClauses + 1);
+
+        for (int i = 1; i < numOfVars + 1; i++){
+            vars[i].setIndex(i);
+        }
+
 
         printf("size of vars: %i", vars.size());
 
-        vector<Clause> clauses(numOfClauses + 1);
+        for (int i = 1; i < numOfClauses + 1; i++){
+            clauses[i].setIndex(i);
+        }
 
         vector<int> dummy;
         cnf.push_back(dummy); // ensure 1-indexedness for cnf
@@ -62,19 +71,16 @@ bool parseDIMACS(std::string filename)
             int literal;
             while (iss >> literal && literal != 0)
             { // if lit > 0 increase pos occ otherwise neg occ. Either way tot occ is updated.
+
                 (literal > 0) ? vars[abs(literal)].incPosOcc()
                               : vars[abs(literal)].incNegOcc();
 
                 clause.push_back(literal);
             }
 
-            /* for (int lit : clause)
-            {
-                clauses[clauseCount].clauseAddElem(lit);
-            } */
-
             cnf.push_back(clause);
             clause = {};
+            clauseCount++;
         }
 
         for (int i = 0; i < numOfClauses + 1; i++)
@@ -82,6 +88,9 @@ bool parseDIMACS(std::string filename)
             printf("Clause %i: ", i);
             for (int j = 0; j < cnf[i].size(); j++)
             {
+                 // add elements to the clause object
+            
+                clauses[i].clauseAddElem(cnf[i][j]);
                 printf("%i ", cnf[i][j]);
             }
             printf("\n");

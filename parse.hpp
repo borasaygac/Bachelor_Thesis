@@ -1,3 +1,6 @@
+#ifndef PARSE_HPP
+#define PARSE_HPP
+
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -7,3 +10,5 @@
 
 
 bool parseDIMACS(std::string filename);
+
+#endif // PARSE_HPP
