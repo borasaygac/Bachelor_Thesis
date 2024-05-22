@@ -1,5 +1,10 @@
+#ifndef GLOBALS_HPP
+#define GLOBALS_HPP
+
 #include <vector>
 #include "variable.hpp"
+#include "clause.hpp"
+#include "parse.hpp"
 
 using namespace std;
 
@@ -9,4 +14,8 @@ extern int numOfClauses;
 
 extern vector<Variable> vars;
 
+extern vector<Clause> clauses;
+
 extern vector<vector<int>> cnf;
+
+#endif // GLOBALS_HPP
