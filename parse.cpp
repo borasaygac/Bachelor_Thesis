@@ -45,14 +45,16 @@ bool parseDIMACS(std::string filename)
         vars.resize(numOfVars + 1);
         clauses.resize(numOfClauses + 1);
 
-        for (int i = 1; i < numOfVars + 1; i++){
+        // for both vars and clauses, we start from 1 to numOfVars and numOfClauses, 0th elem is included as dummy
+        // and initialized for consistency's and mem leak's sake.
+
+        for (int i = 0; i < numOfVars + 1; i++){ // set the index of the variable (1-indexed to n= numOfVars) 
             vars[i].setIndex(i);
         }
 
-
         printf("size of vars: %i", vars.size());
 
-        for (int i = 1; i < numOfClauses + 1; i++){
+        for (int i = 0; i < numOfClauses + 1; i++){ // set the index of the clause (1-indexed to m = numOfClauses)
             clauses[i].setIndex(i);
         }
 
