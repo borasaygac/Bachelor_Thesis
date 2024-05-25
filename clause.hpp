@@ -16,15 +16,25 @@ private:
     int clauseNegOcc;
     
 public:
-    Clause();
+    Clause() {
+        this->isHorn = false;
+        this->clausePosOcc = 0;
+        this->clauseNegOcc = 0;
+    };
     ~Clause();
-    void setIndex(int i);
+    void setIndex(int i) { index = i; }
     void clauseAddElem(int v);
-    int getElemsSize();
-    bool IsClauseHorn();
+    int const getElemsSize() { return elements.size(); }
+    bool IsClauseHorn(int index);
+    bool const getIsHorn() { return isHorn; }
+    int const getIndex() { return index; }
 };
 
 
-bool isHornFormula(int numOfClauses, vector<Clause> clauses);
+bool const isHornFormula(int numOfClauses, std::vector<Clause> clauses);
+
+void const printHornClauses();
+
+
 
 #endif // CLAUSE_HPP

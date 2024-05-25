@@ -5,51 +5,72 @@
 
 using namespace std;
 
-Clause::Clause(){
-    this -> isHorn = false;
-    this -> clausePosOcc = 0;
-    this -> clauseNegOcc = 0;
-}
-
-Clause::~Clause(){
-}
-
-void Clause::setIndex(int i){
-    this -> index = i;
-}
-
-void Clause::clauseAddElem(int v){
-    
-    this -> elements.push_back(vars[abs(v)]);
-
-    if (v > 0) {
-        this -> clausePosOcc++;
-        vars[abs(v)].addOccsToClause(this -> index);
-    } else {
-        this -> clauseNegOcc++;
-        vars[abs(v)].addOccsToClause(this -> index*-1);
-    } 
+Clause::~Clause()
+{
 }
 
 
-int Clause::getElemsSize(){
-    return this -> elements.size();
-}
+void Clause::clauseAddElem(int v)
+{
 
-bool Clause::IsClauseHorn(){   // A clause is Horn if it has at most one positive literal
-    if (this -> clausePosOcc <= 1 && (this -> getElemsSize() > 0)){
-        this -> isHorn = true;
+    this->elements.push_back(vars[abs(v)]);
+
+    if (v > 0)
+    {
+        this->clausePosOcc++;
+        vars[abs(v)].addOccsToClause(this->index);
     }
-    return this -> isHorn;
+    else
+    {
+        this->clauseNegOcc++;
+        vars[abs(v)].addOccsToClause(this->index * -1);
+    }
 }
 
-// Check if the formula is Horn
 
-bool isHornFormula(int numOfClauses, vector<Clause> clauses){
-    for (int i = 1; i < numOfClauses; i++){
-        if (!clauses[i].IsClauseHorn()){
-            return false;
+bool Clause::IsClauseHorn(int index)
+{ // A clause is Horn if it has at most one positive literal
+
+    if (clauses[index].clausePosOcc <= 1)
+    {
+        clauses[index].isHorn = true;
+    } else {
+        clauses[index].isHorn  = false;
+    }
+    return clauses[index].isHorn ;
+}
+
+void const printHornClauses() {   // Print the Horn clauses for debugging purposes
+
+    for (int i = 1; i < numOfClauses + 1; i++) {
+        printf("Clause %i: Horn = %s\n", clauses[i].getIndex(), clauses[i].getIsHorn() ? "true" : "false" );
+    }
+    printf("Horn Clauses: "); 
+
+    for (int i = 1; i < numOfClauses + 1; i++){
+
+        if(clauses[i].getIsHorn()) {
+            printf("%i ", i);
         }
     }
-    return true;
+}
+// Check if the formula is Horn
+
+bool const isHornFormula(int numOfClauses, vector<Clause> clauses){
+
+    int counter = 0;
+
+    for (int i = 1; i <= numOfClauses; i++) { // Check if all clauses are Horn
+        bool isClauseHorn = clauses[i].IsClauseHorn(i);
+        
+        if (isClauseHorn) counter++;
+    }
+
+    if (counter == numOfClauses) {
+        printf("The formula is Horn.\n");
+        return true;
+    } else {
+        printf("The formula is not Horn.\n");
+        return false;
+    }
 }
