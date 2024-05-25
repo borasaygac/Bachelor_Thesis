@@ -11,8 +11,6 @@ vector<Variable> vars;
 vector<Clause> clauses;
 vector<vector<int>> cnf;
 
-// TODO: Make sure horn fucntions work and the data between clause and vars is synced
-
 int main () {
 
     string fileName = "001_count4_2_s.cnf";
@@ -24,6 +22,12 @@ int main () {
     }
 
     isHornFormula(numOfClauses, clauses);
+
+    printHornClauses();
+
+    // todo: Horn sat solver
+
+    // TODO: For 2 sat there is an easier way to solve it, without building the graph
 
     return 0;
 }
