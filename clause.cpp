@@ -53,6 +53,7 @@ void const printHornClauses() {   // Print the Horn clauses for debugging purpos
             printf("%i ", i);
         }
     }
+    printf("\n");
 }
 // Check if the formula is Horn
 

@@ -18,4 +18,11 @@ extern vector<Clause> clauses;
 
 extern vector<vector<int>> cnf;
 
+extern int unitClauseCount;
+
+extern vector<Clause> unitClauses;
+
+int hornSolver();
+
+
 #endif // GLOBALS_HPP

@@ -10,10 +10,12 @@ int numOfClauses = 0;
 vector<Variable> vars;
 vector<Clause> clauses;
 vector<vector<int>> cnf;
+int unitClauseCount = 0;
+vector<Clause> unitClauses;
 
 int main () {
 
-    string fileName = "001_count4_2_s.cnf";
+    string fileName = "002_testunit.cnf";
     try {
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
@@ -24,6 +26,18 @@ int main () {
     isHornFormula(numOfClauses, clauses);
 
     printHornClauses();
+
+    //hornSolver();
+    printf("Unit Clause Count: %i\n", unitClauseCount);
+    printf("Unit Clauses: ");
+    if (unitClauses.empty()){
+        printf("No unit clauses!\n");
+    } else {
+        for (Clause tmp_cls : unitClauses) {
+            printf("%i, ", tmp_cls.getIndex());
+        }
+    }
+    
 
     // todo: Horn sat solver
 

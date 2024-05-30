@@ -81,17 +81,18 @@ bool parseDIMACS(std::string filename)
             }
 
             cnf.push_back(clause);
+
+            if (clause.size() == 1) unitClauseCount++;
             clause = {};
             clauseCount++;
         }
 
-        for (int i = 0; i < numOfClauses + 1; i++)
-        {
+        for (int i = 0; i < numOfClauses + 1; i++) {
             printf("Clause %i: ", i);
-            for (int j = 0; j < cnf[i].size(); j++)
-            {
+            if (cnf[i].size() == 1) unitClauses.push_back(clauses[i]);
+            for (int j = 0; j < cnf[i].size(); j++){
                  // add elements to the clause object
-            
+
                 clauses[i].clauseAddElem(cnf[i][j]);
                 printf("%i ", cnf[i][j]);
             }
