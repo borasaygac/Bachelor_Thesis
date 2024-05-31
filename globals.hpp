@@ -25,7 +25,7 @@ extern vector<Clause> unitClauses;
 
 int hornSolver();
 
-int printHornAssignments();
+void const printModel(bool sat);
 
 bool isFormulaSat();
 

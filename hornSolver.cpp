@@ -21,16 +21,5 @@ int hornSolver() {
     return 0;
 }
 
-int printHornAssignments() {
-    printf("Horn Formula Assignments: \n");
-    for (int i = 1; i <= numOfClauses; i++) {
-        printf("Clause %i: ", i);
-        for (int j = 0; j < clauses[i].getElemsSize(); j++) {
-            printf("%i ", vars[abs(cnf[i][j])].getValue());
-        }
-        printf("\n");
-    }
-    printf("\n");
-    return 0;
-}
+
  
