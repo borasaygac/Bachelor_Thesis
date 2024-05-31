@@ -12,10 +12,7 @@
                 "-g",
                 "-o",
                 "main.exe",
-                "main.cpp",
-                "parse.cpp",
-                "variable.cpp",
-                "clause.cpp"
+                "*.cpp"
             ],
             "options": {
                 "cwd": ""

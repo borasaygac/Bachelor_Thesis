@@ -65,7 +65,6 @@ bool parseDIMACS(std::string filename)
         vector<int> clause;
         while (getline(file, line))
         {
-            printf("test1");
             istringstream iss(line);
             if (line[0] == 0)
                 continue;
