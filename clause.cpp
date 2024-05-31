@@ -13,7 +13,7 @@ Clause::~Clause()
 void Clause::clauseAddElem(int v)
 {
 
-    this->elements.push_back(vars[abs(v)]);
+    this->elements.push_back(&vars[abs(v)]);
 
     if (v > 0)
     {
@@ -74,4 +74,17 @@ bool const isHornFormula(int numOfClauses, vector<Clause> clauses){
         printf("The formula is not Horn.\n");
         return false;
     }
+}
+
+bool const Clause::evaluateClause() {
+    for (int i = 0; i < this->elements.size(); i++) {
+        if (((*this->elements[i]).getValue() == TRUE && cnf[this->index][i] > 0) || 
+            ((*this->elements[i]).getValue() == FALSE && cnf[this->index][i] < 0)) { 
+            // if the variable is true and the literal is positive => clause satisfied or
+            // if the variable is false and the literal is negative => clause satisfied
+            return true;
+        }
+    }
+    // if none of the above conditions are met => clause not satisfied
+    return false;
 }
