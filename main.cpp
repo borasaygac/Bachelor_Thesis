@@ -19,7 +19,7 @@ int main () {
     // measure CPU time...
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
 
-    string fileName = "horntest01.cnf";
+    string fileName = "horntest02.cnf";
     try {
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
