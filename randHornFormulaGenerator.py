@@ -14,7 +14,7 @@ def gen_rand_horn_formula(num_vars, num_clauses, max_clause_length):
             positive_literal = random.choice(clause_vars)
         else:
             positive_literal = random.choice([random.choice(clause_vars), f'-{random.choice(clause_vars)}']) 
-        clause = ['0'] + [f' -{var}' if var != positive_literal else f' {var}' for var in clause_vars] # Negate all literals except the positive one
+        clause = [f'-{var} ' if var != positive_literal else f'{var} ' for var in clause_vars] + ['0'] # Negate all literals except the positive one
         formula.append(''.join(clause))
     
     return '\n'.join(clause for clause in formula)
