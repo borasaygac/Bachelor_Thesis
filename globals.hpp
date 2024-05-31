@@ -24,5 +24,7 @@ extern vector<Clause> unitClauses;
 
 int hornSolver();
 
+int printHornAssignments();
+
 
 #endif // GLOBALS_HPP

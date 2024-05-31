@@ -36,10 +36,12 @@ int main () {
         for (Clause tmp_cls : unitClauses) {
             printf("%i, ", tmp_cls.getIndex());
         }
+        printf("\n");
     }
     
+    hornSolver();
 
-    // todo: Horn sat solver
+    printHornAssignments();
 
     // TODO: For 2 sat there is an easier way to solve it, without building the graph
 
