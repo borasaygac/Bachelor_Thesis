@@ -50,6 +50,7 @@ bool parseDIMACS(std::string filename)
 
         for (int i = 0; i < numOfVars + 1; i++){ // set the index of the variable (1-indexed to n= numOfVars) 
             vars[i].setIndex(i);
+            vars[i].setValue(FREE);
         }
 
         printf("size of vars: %i", vars.size());

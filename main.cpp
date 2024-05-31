@@ -43,6 +43,19 @@ int main () {
 
     printHornAssignments();
 
+    //print var assigs
+    for (int i = 1; i <= numOfVars; i++) {
+        printf("Variable %i: %i\n", i, vars[i].getValue());
+    }
+
+    bool sat = isFormulaSat();
+
+    if (sat) {
+        printf("The formula is SAT\n");
+    } else {
+        printf("The formula is UNSAT\n");
+    }
+
     // TODO: For 2 sat there is an easier way to solve it, without building the graph
 
     return 0;

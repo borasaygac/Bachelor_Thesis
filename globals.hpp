@@ -6,6 +6,7 @@
 #include "clause.hpp"
 #include "parse.hpp"
 
+
 using namespace std;
 
 extern int numOfVars;
@@ -25,6 +26,8 @@ extern vector<Clause> unitClauses;
 int hornSolver();
 
 int printHornAssignments();
+
+bool isFormulaSat();
 
 
 #endif // GLOBALS_HPP
