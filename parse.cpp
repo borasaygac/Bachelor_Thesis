@@ -53,7 +53,7 @@ bool parseDIMACS(std::string filename)
             vars[i].setValue(FREE);
         }
 
-        printf("size of vars: %i", vars.size());
+        printf("size of vars: %i\n", vars.size());
 
         for (int i = 0; i < numOfClauses + 1; i++){ // set the index of the clause (1-indexed to m = numOfClauses)
             clauses[i].setIndex(i);

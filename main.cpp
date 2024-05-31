@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <chrono>
 #include "parse.hpp"
 #include "clause.hpp"
 
@@ -15,7 +16,10 @@ vector<Clause> unitClauses;
 
 int main () {
 
-    string fileName = "002_testunit.cnf";
+    // measure CPU time...
+    chrono::steady_clock::time_point start = chrono::steady_clock::now();
+
+    string fileName = "horntest01.cnf";
     try {
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
@@ -41,8 +45,6 @@ int main () {
     
     hornSolver();
 
-    printHornAssignments();
-
     //print var assigs
     for (int i = 1; i <= numOfVars; i++) {
         printf("Variable %i: %i\n", i, vars[i].getValue());
@@ -56,7 +58,21 @@ int main () {
         printf("The formula is UNSAT\n");
     }
 
+    chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+    chrono::duration<double> duration = chrono::duration_cast<std::chrono::duration<double>>(end - start);
+
+
     // TODO: For 2 sat there is an easier way to solve it, without building the graph
+
+    printModel(sat);
+
+    printf("\nCPU time used: %.6f seconds\n\n", duration.count());
+
+    cout.flush();
+
+    printf("-------------------------------------\n\n");
+
 
     return 0;
 }
