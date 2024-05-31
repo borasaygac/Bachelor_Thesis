@@ -11,7 +11,7 @@ enum Assignment {FREE, TRUE, FALSE};
 
 class Variable {
 private:
-    Assignment value = FREE;
+    Assignment value;
     int index;
     int pos_occ = 0;
     int neg_occ = 0;

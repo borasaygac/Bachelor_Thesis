@@ -10,7 +10,7 @@ class Clause{
 
 private:
     int index;
-    std::vector<Variable> elements;
+    std::vector<Variable*> elements;
     bool isHorn;
     int clausePosOcc;
     int clauseNegOcc;
@@ -28,6 +28,7 @@ public:
     bool IsClauseHorn(int index);
     bool const getIsHorn() { return isHorn; }
     int const getIndex() { return index; }
+    bool const evaluateClause();
 };
 
 
