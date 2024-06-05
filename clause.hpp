@@ -34,7 +34,7 @@ public:
 
 bool const isHornFormula(int numOfClauses, std::vector<Clause> clauses);
 
-void const printHornClauses();
+void const printHornClauses(bool horn);
 
 
 

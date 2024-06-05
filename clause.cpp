@@ -40,24 +40,25 @@ bool Clause::IsClauseHorn(int index)
     return clauses[index].isHorn ;
 }
 
-void const printHornClauses() {   // Print the Horn clauses for debugging purposes
+void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
 
-    for (int i = 1; i < numOfClauses + 1; i++) {
-        printf("Clause %i: Horn = %s\n", clauses[i].getIndex(), clauses[i].getIsHorn() ? "true" : "false" );
-    }
-    printf("Horn Clauses: "); 
+    if (!horn) {
+        printf("The formula is not Horn becasuse clauses: ");
+        
+        for (int i = 1; i < numOfClauses + 1; i++){
 
-    for (int i = 1; i < numOfClauses + 1; i++){
-
-        if(clauses[i].getIsHorn()) {
-            printf("%i ", i);
+            if(!clauses[i].getIsHorn()) {
+                printf("%i ", i);
+            }
         }
+        printf("are not Horn.\n");
+    } else {
+        printf("The formula is Horn because all clauses are Horn.\n");
     }
-    printf("\n");
 }
-// Check if the formula is Horn
 
-bool const isHornFormula(int numOfClauses, vector<Clause> clauses){
+
+bool const isHornFormula(int numOfClauses, vector<Clause> clauses){ // Check if the formula is Horn
 
     int counter = 0;
 
@@ -68,10 +69,8 @@ bool const isHornFormula(int numOfClauses, vector<Clause> clauses){
     }
 
     if (counter == numOfClauses) {
-        printf("The formula is Horn.\n");
         return true;
     } else {
-        printf("The formula is not Horn.\n");
         return false;
     }
 }
