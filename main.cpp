@@ -14,6 +14,7 @@ vector<Clause> clauses;
 vector<vector<int>> cnf;
 int unitClauseCount = 0;
 vector<Clause> unitClauses;
+vector<pair<int,int>> deltaF;
 bool horn = false;
 
 int main (int argc, char *argv[]) {
@@ -37,6 +38,9 @@ int main (int argc, char *argv[]) {
     horn = isHornFormula(numOfClauses, clauses); // check if the formula is a horn formula
 
     printHornClauses(horn); // print the non-horn clauses if formula not horn
+
+    // Add non interlaced check here
+    // deltaF
 
     if (horn) {
         printf("Unit Clause Count: %i\n", unitClauseCount);

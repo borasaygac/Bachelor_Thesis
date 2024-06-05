@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// General Global Variables
+
 extern int numOfVars;
 
 extern int numOfClauses;
@@ -19,13 +21,25 @@ extern vector<Clause> clauses;
 
 extern vector<vector<int>> cnf;
 
+// Unit Clause Global Variables
+
 extern int unitClauseCount;
 
 extern vector<Clause> unitClauses;
 
+// Horn Solver Global Variables
+
 int hornSolver();
 
+// Non Interlaced SAT Global Variables
+
+extern vector<pair<int,int>> deltaF;
+
+// Print Related Functions
+
 void const printModel(bool sat);
+
+// Verify if the formula is satisfied and related functions
 
 bool isFormulaSat();
 
