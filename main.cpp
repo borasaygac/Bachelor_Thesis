@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <chrono>
+#include <string>
 #include "parse.hpp"
 #include "clause.hpp"
 
@@ -13,13 +14,19 @@ vector<Clause> clauses;
 vector<vector<int>> cnf;
 int unitClauseCount = 0;
 vector<Clause> unitClauses;
+bool horn = false;
 
-int main () {
+int main (int argc, char *argv[]) {
+
+    if (argc < 2 ){
+        cerr << "\nUsage: " << argv[0] << " <filename>\n" << "Please add a file when calling the main.exe!\n" << endl;
+        return 1;
+    }
 
     // measure CPU time...
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
 
-    string fileName = "horntest02.cnf";
+    string fileName = argv[1];
     try {
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
@@ -27,23 +34,26 @@ int main () {
         // handle error 
     }
 
-    isHornFormula(numOfClauses, clauses);
+    horn = isHornFormula(numOfClauses, clauses); // check if the formula is a horn formula
 
-    printHornClauses();
+    printHornClauses(horn); // print the non-horn clauses if formula not horn
 
-    //hornSolver();
-    printf("Unit Clause Count: %i\n", unitClauseCount);
-    printf("Unit Clauses: ");
-    if (unitClauses.empty()){
-        printf("No unit clauses!\n");
-    } else {
-        for (Clause tmp_cls : unitClauses) {
-            printf("%i, ", tmp_cls.getIndex());
-        }
+    if (horn) {
+        printf("Unit Clause Count: %i\n", unitClauseCount);
+        printf("Unit Clauses: ");
+        if (unitClauses.empty()){
+            printf("No unit clauses!\n");
+        } else {
+            for (Clause tmp_cls : unitClauses) {
+                printf("%i, ", tmp_cls.getIndex());
+            }
         printf("\n");
+        }
+        hornSolver();
     }
     
-    hornSolver();
+    
+    
 
     //print var assigs
     for (int i = 1; i <= numOfVars; i++) {
