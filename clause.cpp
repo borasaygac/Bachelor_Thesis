@@ -43,15 +43,20 @@ bool Clause::IsClauseHorn(int index)
 void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
 
     if (!horn) {
-        printf("The formula is not Horn becasuse clauses: ");
-        
+        printf("The formula is not Horn becasuse clause(s): ");
+        int hornCounter = 0;
         for (int i = 1; i < numOfClauses + 1; i++){
 
             if(!clauses[i].getIsHorn()) {
                 printf("%i ", i);
+                hornCounter++;
             }
         }
-        printf("are not Horn.\n");
+        if (hornCounter == 1) {
+            printf("is not Horn.\n");
+        } else {
+            printf("are not Horn.\n");
+        }
     } else {
         printf("The formula is Horn because all clauses are Horn.\n");
     }
