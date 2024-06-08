@@ -8,7 +8,7 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("DIMACS/" + filename);
+    ifstream file("HornCNFs/" + filename);
     string line;
 
     if (file.is_open())
@@ -88,15 +88,15 @@ bool parseDIMACS(std::string filename)
         }
 
         for (int i = 1; i < numOfClauses + 1; i++) {
-            printf("Clause %i: ", i);
+            //printf("Clause %i: ", i);
             if (cnf[i].size() == 1) unitClauses.push_back(clauses[i]);
             for (int j = 0; j < cnf[i].size(); j++){
                  // add elements to the clause object
                 clauses[i].clauseAddElem(cnf[i][j]);
-                printf("%i ", cnf[i][j]);
+                //printf("%i ", cnf[i][j]);
             }
-            printf("\n");
-        }
+            //printf("\n");
+        } 
     }
     else
     {

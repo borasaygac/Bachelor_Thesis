@@ -29,6 +29,7 @@ int main (int argc, char *argv[]) {
 
     string fileName = argv[1];
     try {
+        printf("Parsing file: %s\n", fileName.c_str());
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
         cerr << "Error: " << e.what() << '\n';
@@ -43,11 +44,11 @@ int main (int argc, char *argv[]) {
     // deltaF
 
     if (horn) {
-        printf("Unit Clause Count: %i\n", unitClauseCount);
-        printf("Unit Clauses: ");
         if (unitClauses.empty()){
             printf("No unit clauses!\n");
         } else {
+            printf("Unit Clause Count: %i\n", unitClauseCount);
+            printf("Unit Clauses: ");
             for (Clause tmp_cls : unitClauses) {
                 printf("%i, ", tmp_cls.getIndex());
             }
@@ -70,9 +71,9 @@ int main (int argc, char *argv[]) {
     isFNonInterlaced(); // check if the formula is non-interlaced
 
     //print var assigs
-    for (int i = 1; i <= numOfVars; i++) {
+    /*for (int i = 1; i <= numOfVars; i++) {
         printf("Variable %i: %i\n", i, vars[i].getValue());
-    }
+    }*/
 
     bool sat = isFormulaSat();
 
