@@ -57,7 +57,17 @@ int main (int argc, char *argv[]) {
     }
     
     
-    
+    createDeltaF(); // create deltaF vector
+
+    //print deltaF
+
+    printf("DeltaF: ");
+    for (pair<int,int> p : deltaF) {
+        printf("(%i, %i), ", p.first, p.second);
+    }
+    printf("\n");
+
+    isFNonInterlaced(); // check if the formula is non-interlaced
 
     //print var assigs
     for (int i = 1; i <= numOfVars; i++) {
