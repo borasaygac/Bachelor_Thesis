@@ -29,6 +29,7 @@ public:
     bool const getIsHorn() { return isHorn; }
     int const getIndex() { return index; }
     bool const evaluateClause();
+    bool const contains(int v);
 };
 
 

@@ -53,3 +53,15 @@ bool const Clause::evaluateClause() {
     // if none of the above conditions are met => clause not satisfied
     return false;
 }
+
+// Check if the clause contains a literal v
+bool const Clause::contains(int v) {
+    for (int i = 0; i < this->elements.size(); i++) { // within the elements of the clause
+        if (cnf[this->index][i] == v ) { // if the literal is found 
+            // The signage has to match -> if v is positive, only query for positive v and not negative v
+            return true;
+        }
+    }
+    // else return false
+    return false;
+}
