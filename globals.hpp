@@ -35,6 +35,10 @@ int hornSolver();
 
 extern vector<pair<int,int>> deltaF;
 
+void createDeltaF();
+
+bool isFNonInterlaced();
+
 // Print Related Functions
 
 void const printModel(bool sat);
