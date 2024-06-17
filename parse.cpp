@@ -8,7 +8,7 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("HornCNFs/" + filename);
+    ifstream file("DIMACS/" + filename);
     string line;
 
     if (file.is_open())

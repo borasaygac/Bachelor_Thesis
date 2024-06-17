@@ -1,9 +1,9 @@
 @echo off
 setlocal
 
-set "dirPath=DIMACS"
+set "dirPath=CompTests"
 set "exePath=main.exe"
-set "outputFile=output.txt"
+set "outputFile=comp.txt"
 
 for %%f in ("%dirPath%/*.cnf") do (
     echo Processing File: %%f >> "%outputFile%"
