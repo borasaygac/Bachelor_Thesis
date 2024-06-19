@@ -1,4 +1,4 @@
-#include "globals.hpp"
+#include "../globals.hpp"
 
 void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
 

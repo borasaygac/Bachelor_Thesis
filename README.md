@@ -1,5 +1,11 @@
 # Thesis
 
+Order of checking 
+1. Horn
+2. 2-SAT
+3. Nested
+4. CoNested
+5. Non Interlaced
 
 
 ## Getting started

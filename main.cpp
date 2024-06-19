@@ -15,7 +15,13 @@ vector<vector<int>> cnf;
 int unitClauseCount = 0;
 vector<Clause> unitClauses;
 vector<pair<int,int>> deltaF;
+bool twosat = false;
 bool horn = false;
+bool nested = false;
+bool conested = false;
+bool nonInterlaced = false;
+
+
 
 int main (int argc, char *argv[]) {
 
@@ -36,13 +42,32 @@ int main (int argc, char *argv[]) {
         // handle error 
     }
 
-    horn = isHornFormula(numOfClauses, clauses); // check if the formula is a horn formula
+    // Check if the formula is Horn 
+    horn = isHornFormula(numOfClauses, clauses); 
 
-    printHornClauses(horn); // print the non-horn clauses if formula not horn
+    printHornClauses(horn); // print the non-horn clauses if formula not horn (DEBUG)
 
-    // Add non interlaced check here
-    // deltaF
+    // Check if the formula is 2-SAT
 
+    //twosat = isTwoSat(numOfClauses, clauses);
+
+    // Check if the formula is nested
+
+    // Check if the formula is conested
+
+    // Check if the formula is non-interlaced
+    createDeltaF(); // create deltaF vector
+
+    //print deltaF
+    printf("DeltaF: ");
+    for (pair<int,int> p : deltaF) {
+        printf("(%i, %i), ", p.first, p.second);
+    }
+    printf("\n");
+
+    isFNonInterlaced(); // check if the formula is non-interlaced
+
+    // The big if-else block to determine which algorithm to use
     if (horn) {
         if (unitClauses.empty()){
             printf("No unit clauses!\n");
@@ -55,21 +80,20 @@ int main (int argc, char *argv[]) {
         printf("\n");
         }
         hornSolver();
+    } else if (twosat) {
+        // DPLL two sat
+    } else if (nested) {
+        // nested alg{
+    } else if (conested) {
+        // conested alg
+    } else if (nonInterlaced){
+        //nonInterlacedSolver();
+    } else {
+        // Does not fit any of the above
+
+        // DPLL
     }
     
-    
-    createDeltaF(); // create deltaF vector
-
-    //print deltaF
-
-    printf("DeltaF: ");
-    for (pair<int,int> p : deltaF) {
-        printf("(%i, %i), ", p.first, p.second);
-    }
-    printf("\n");
-
-    isFNonInterlaced(); // check if the formula is non-interlaced
-
     //print var assigs
     /*for (int i = 1; i <= numOfVars; i++) {
         printf("Variable %i: %i\n", i, vars[i].getValue());
@@ -80,15 +104,17 @@ int main (int argc, char *argv[]) {
     if (sat) {
         printf("The formula is SAT\n");
     } else {
-        printf("The formula is UNSAT\n");
+        if (horn || twosat || nested || conested || nonInterlaced) {
+            printf("The formula is UNSAT\n");
+        } else {
+            // DPLL
+            printf("DOES NOT FIT ANY\n");
+        }
     }
 
     chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
     chrono::duration<double> duration = chrono::duration_cast<std::chrono::duration<double>>(end - start);
-
-
-    // TODO: For 2 sat there is an easier way to solve it, without building the graph
 
     printModel(sat);
 

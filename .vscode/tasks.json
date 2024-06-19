@@ -12,7 +12,8 @@
                 "-g",
                 "-o",
                 "main.exe",
-                "*.cpp"
+                "*.cpp",
+                "Solvers/*.cpp"    
             ],
             "options": {
                 "cwd": ""
