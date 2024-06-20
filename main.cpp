@@ -9,7 +9,6 @@ using namespace std;
 
 int numOfVars = 0;
 int numOfClauses = 0;
-int numOfSatClauses = 0;
 vector<Variable> vars;
 vector<Clause> clauses;
 vector<vector<int>> cnf;
@@ -21,8 +20,14 @@ bool horn = false;
 bool nested = false;
 bool conested = false;
 bool nonInterlaced = false;
-bool backtrackFlag = false;
 
+
+// for 2 SAT and DPDL
+int numOfSatClauses = 0;
+bool backtrackFlag = false;
+int dc = 0;
+int curVar = 1;
+int btc = 0;
 
 
 int main (int argc, char *argv[]) {

@@ -8,6 +8,10 @@ extern int numOfSatClauses;
 
 extern bool backtrackFlag;
 
+extern int btc; // backtrack counter
+
+extern int curVar;
+
 std::stack<int> assig;
 
 std::queue<int> toPropagate;
@@ -15,5 +19,9 @@ std::queue<int> toPropagate;
 void propagate();
 
 void update(int assertedVar);
+
+void backtrack();
+
+void revert(int unassignedVar);
 
 #endif // DPDL_HPP
