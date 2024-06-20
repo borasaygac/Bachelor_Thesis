@@ -8,7 +8,11 @@
 
 using namespace std;
 
-enum Assignment {FREE, TRUE, FALSE};
+enum Assignment {
+    FALSE,
+    TRUE,
+    FREE
+};
 
 class Variable {
 private:
