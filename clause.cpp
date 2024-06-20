@@ -24,6 +24,7 @@ void Clause::clauseAddElem(int v) {
         this->clauseNegOcc++;
         vars[abs(v)].addOccsToClause(this->index * -1);
     }
+    this->active = this->getElemsSize();
 }
 
 
