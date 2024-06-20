@@ -42,7 +42,7 @@ void update(int assertedVar) {
                                         var->getDynamicNegativeOccurrances().erase(*clauseIndex);
 
             // detect pure literals
-             if ((*var).getValue() == FREE && !(*var).getEnqueued()) {
+            /* if ((*var).getValue() == FREE && !(*var).getEnqueued()) {
                 if ((*var).getDynamicPositiveOccurrances().size() == 0 && (*var).getDynamicNegativeOccurrances().size() > 0) {
                     int index = clause->getElems().at(i)->getIndex();
                     std::cout << "Index: " << index << std::endl;
@@ -53,7 +53,7 @@ void update(int assertedVar) {
                     toPropagate.push(std::abs(clause->literals[i]));
                     (*var).setEnqueued(true);
                 }
-            } 
+            } */
         }
         numOfSatClauses++;
     }
