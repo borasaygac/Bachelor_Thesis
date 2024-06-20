@@ -10,21 +10,13 @@ void revert(int unassignedVar) {
     // all clauses the unassignedVar appears in (including satisfied clauses) and evaluates to TRUE
     std::set<int>* allOccurences;
 
-    if(vars[unassignedVar].getValue() == TRUE) {
-        allOccurences->insert(vars[unassignedVar].getPositiveOccurrances().begin(),
-                              vars[unassignedVar].getPositiveOccurrances().end());
-    } else {
-        allOccurences->insert(vars[unassignedVar].getNegativeOccurrances().begin(),
-                              vars[unassignedVar].getNegativeOccurrances().end());
-    }
+    allOccurences = (vars[unassignedVar].getValue() == TRUE) ? &vars[unassignedVar].getPositiveOccurrances(): 
+                                                               &vars[unassignedVar].getNegativeOccurrances();
 
     if (vars[unassignedVar].getValue() == TRUE) {
-        clausesToIncrement->insert(vars[unassignedVar].getNegativeOccurrances().begin(),
-                                   vars[unassignedVar].getNegativeOccurrances().end());
+        clausesToIncrement = &vars[unassignedVar].getNegativeOccurrances();
     } else {
-        clausesToIncrement->insert(vars[unassignedVar].getPositiveOccurrances().begin(),
-                                   vars[unassignedVar].getPositiveOccurrances().end());
-
+        clausesToIncrement = &vars[unassignedVar].getPositiveOccurrances();
         unassignedVar = -unassignedVar;
     }
 
@@ -44,17 +36,10 @@ void revert(int unassignedVar) {
 
         clause->setSatisfiedBy(0);
 
-        for (int i = 0; i < clause->getElemsSize(); i++) {
+        for (int i = 0; i < clause->literals.size(); i++) {
+            clause -> literals[i] > 0 ? vars[std::abs(clause->literals[i])].getDynamicPositiveOccurrances().insert(*clauseIndex):
+                                        vars[std::abs(clause->literals[i])].getDynamicNegativeOccurrances().insert(*clauseIndex);
 
-            if (cnf[*clauseIndex][clause->getElems().at(i)->getIndex()] > 0) {
-                auto dynOccurances = vars[std::abs(clause->getElems().at(i)->getIndex())].getDynamicPositiveOccurrances();
-                dynOccurances.push_back(*clauseIndex);
-                vars[std::abs(clause->getElems().at(i)->getIndex())].setDynamicPositiveOccurrances(dynOccurances);
-            } else {
-                auto dynOccurances = vars[std::abs(clause->getElems().at(i)->getIndex())].getDynamicNegativeOccurrances();
-                dynOccurances.push_back(*clauseIndex);
-                vars[std::abs(clause->getElems().at(i)->getIndex())].setDynamicNegativeOccurrances(dynOccurances);
-            }
         }
         numOfSatClauses--;
     }

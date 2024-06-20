@@ -4,6 +4,7 @@
 void propagate() {
 
     int variableToPropagate;
+    
     while (!toPropagate.empty()) { // While there are variables to propagate in the queue toPropagate -- FIFO
         variableToPropagate = toPropagate.front();
         toPropagate.pop();
