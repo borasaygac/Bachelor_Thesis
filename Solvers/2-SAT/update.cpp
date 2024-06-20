@@ -3,6 +3,7 @@
 
 #include <set>
 #include <algorithm>
+#include <iostream>
 
 void update(int assertedVar) {
     // clauses where assertedVar evaluates to FALSE
@@ -13,17 +14,15 @@ void update(int assertedVar) {
 
     // In DPDL - analogous to UP - if the var is true than the negative occurrances need to be updated as they will evaluate to false
     // vice versa otherwise
-    if (vars[assertedVar].getValue() == TRUE) { 
-        clausesToUpdate->insert(vars[assertedVar].getNegativeOccurrances().begin(), vars[assertedVar].getNegativeOccurrances().end());
-    } else {
-        clausesToUpdate->insert(vars[assertedVar].getPositiveOccurrances().begin(), vars[assertedVar].getPositiveOccurrances().end());
-    }
+
+    clausesToUpdate = (vars[assertedVar].getValue() == TRUE) ? &vars[assertedVar].getNegativeOccurrances(): 
+                                                                &vars[assertedVar].getPositiveOccurrances();
 
     // Similarly, the clauses to mark satisfied are the ones are the positives if the var is true, and vice versa 
     if (vars[assertedVar].getValue() == TRUE) {
-        clausesToMarkSatisfied->insert(vars[assertedVar].getDynamicPositiveOccurrances().begin(), vars[assertedVar].getDynamicPositiveOccurrances().end());
+        clausesToMarkSatisfied = &vars[assertedVar].getDynamicPositiveOccurrances();
     } else {
-        clausesToMarkSatisfied->insert(vars[assertedVar].getDynamicNegativeOccurrances().begin(), vars[assertedVar].getDynamicNegativeOccurrances().end());
+        clausesToMarkSatisfied = &vars[assertedVar].getDynamicNegativeOccurrances();      
         assertedVar = -assertedVar;
     }
 
@@ -35,43 +34,31 @@ void update(int assertedVar) {
         Clause* clause = &clauses[*clauseIndex];
         clause->setSatisfiedBy(assertedVar);
 
-        for (int i = 0; i < clause->getElemsSize(); i++) {
-            auto var = &vars[std::abs(clause->getElems().at(i)->getIndex())];
+        for (int i = 0; i < clause->literals.size(); i++) {
+            auto var = &vars[std::abs(clause->literals[i])];
 
             // remove the clause from the dynamic occurrances of the variable according to the sign of the literal
-            if (cnf[clause->getIndex()][i] > 0) {
-                auto occurrances = var->getDynamicPositiveOccurrances(); 
-                auto it = std::find(occurrances.begin(), occurrances.end(), *clauseIndex);
-                if (it != occurrances.end()) {
-                    occurrances.erase(it);
-                }
-                var->setDynamicPositiveOccurrances(occurrances);
-            } else {
-                auto occurrances = var->getNegativeOccurrances(); 
-                auto it = std::find(occurrances.begin(), occurrances.end(), *clauseIndex);
-                if (it != occurrances.end()) {
-                    occurrances.erase(it);
-                }
-                var->setDynamicNegativeOccurrances(occurrances);
-            }
-            
+            clause -> literals[i] > 0 ? var->getDynamicPositiveOccurrances().erase(*clauseIndex): 
+                                        var->getDynamicNegativeOccurrances().erase(*clauseIndex);
 
             // detect pure literals
-            if ((*var).getValue() == FREE && !(*var).getEnqueued()) {
+             if ((*var).getValue() == FREE && !(*var).getEnqueued()) {
                 if ((*var).getDynamicPositiveOccurrances().size() == 0 && (*var).getDynamicNegativeOccurrances().size() > 0) {
-                    toPropagate.push(-std::abs(clause->getElems().at(i)->getIndex()));
+                    int index = clause->getElems().at(i)->getIndex();
+                    std::cout << "Index: " << index << std::endl;
+                    toPropagate.push(-std::abs(clause->literals[i]));
                     (*var).setEnqueued(true);
                 }
                 if ((*var).getDynamicNegativeOccurrances().size() == 0 && (*var).getDynamicPositiveOccurrances().size() > 0) {
-                    toPropagate.push(std::abs(clause->getElems().at(i)->getIndex()));
+                    toPropagate.push(std::abs(clause->literals[i]));
                     (*var).setEnqueued(true);
                 }
-            }
+            } 
         }
         numOfSatClauses++;
     }
 
-     std::set<int> copy2 = *clausesToUpdate;
+    std::set<int> copy2 = *clausesToUpdate;
     
     for (auto clauseIndex2 = copy2.begin(); clauseIndex2 != copy2.end(); ++clauseIndex2) {
         clauses[*clauseIndex2].decrementActive();
@@ -82,15 +69,20 @@ void update(int assertedVar) {
             backtrackFlag = true;
         }
         if (clauses[*clauseIndex2].getActive() == 1) {
-            for (int i = 0; i < clause->getElemsSize(); i++) {
-                if (vars[std::abs(clause->getElems().at(i)->getIndex())].getValue() == FREE && 
-                   !vars[std::abs(clause->getElems().at(i)->getIndex())].getEnqueued()) {
-                    toPropagate.push(cnf[*clauseIndex2][clause->getElems().at(i)->getIndex()]);
-                    vars[std::abs(clause->getElems().at(i)->getIndex())].setEnqueued(true);
+            for (int i = 0; i < clause->literals.size(); i++) {
+                if (vars[std::abs(clause->literals[i])].getValue() == FREE && 
+                   !vars[std::abs(clause->literals[i])].getEnqueued()) {
+                    //printf("Pushing %i\n", clause->literals[i]);
+                    toPropagate.push(clause->literals[i]);
+                    vars[std::abs(clause->literals[i])].setEnqueued(true);
                 }
             }
         }
     }
+
+    //delete clausesToUpdate;
+
+    //delete clausesToMarkSatisfied;
 
     if (backtrackFlag) backtrack();
 
