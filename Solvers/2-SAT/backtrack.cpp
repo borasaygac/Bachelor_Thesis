@@ -2,6 +2,8 @@
 #include "../../dpdl.hpp"
 
 #include <cmath>
+#include <thread>
+#include <future>
 
 void backtrack() {
   backtrackFlag = false;
@@ -24,8 +26,11 @@ void backtrack() {
   }
 
   // UNSAT
-  if (assig.empty())
+  // if no more variables to unassign, we have backtracked to the first decision
+  // terminate thread and return 1
+  if (assig.empty()) {
     pthread_exit((void *)1);
+  }
 
   // handle most recent branching variable
   int b = assig.top();
