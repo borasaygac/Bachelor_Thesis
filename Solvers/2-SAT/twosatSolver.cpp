@@ -1,5 +1,8 @@
 #include "../../globals.hpp"
+#include "../../dpdl.hpp"
 
+
+// Checks whether the formula is 2-SAT
 bool isTwoSat(int numOfClauses, vector<Clause> clauses) {
 
     for (int i = 1; i <= numOfClauses; i++) {
@@ -22,3 +25,26 @@ bool isTwoSat(int numOfClauses, vector<Clause> clauses) {
     printf("The formula is 2-SAT because all clauses are 2-SAT.\n\n\n");
     return true;
 }
+
+// Solves the 2-SAT formula -- main function 
+void* twoSatDPDL(void* arg) {
+    while (true) {
+        propagate();
+        chooseINC();
+    }
+}
+
+
+
+void chooseINC() {
+    dc++;
+    //printf("curvar: %i\n", curVar);
+    while (vars[curVar].getValue() != FREE) curVar++;
+
+    vars[curVar].setValue(TRUE);
+    vars[curVar].setForced(false);
+    assig.push(curVar);
+    update(curVar);
+}
+
+
