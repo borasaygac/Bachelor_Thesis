@@ -50,6 +50,7 @@ int main (int argc, char *argv[]) {
     // Check if the formula is 2-SAT
 
     twosat = isTwoSat(numOfClauses, clauses);
+    printf("Is 2-SAT: %i\n", twosat);
 
     // Check if the formula is nested
 
@@ -59,11 +60,11 @@ int main (int argc, char *argv[]) {
     createDeltaF(); // create deltaF vector
 
     //print deltaF
-    printf("DeltaF: ");
+    /* printf("DeltaF: ");
     for (pair<int,int> p : deltaF) {
         printf("(%i, %i), ", p.first, p.second);
     }
-    printf("\n");
+    printf("\n"); */
 
     isFNonInterlaced(); // check if the formula is non-interlaced
 

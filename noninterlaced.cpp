@@ -46,11 +46,13 @@ bool isFNonInterlaced() {
                 printf("F is interlaced\n");
                 printf("(i: %i, j: %i), (k: %i, l: %i)\n", deltaF[i].first, deltaF[i].second, deltaF[j].first, deltaF[j].second);
                 printf("%i < %i < %i < %i\n", deltaF[i].first, deltaF[j].first, deltaF[i].second, deltaF[j].second);
+                printf("\n\n");
                 return false;
             }
         }
     }
 
     printf("F is non-interlaced\n");
+    printf("\n\n");
     return true;
 }

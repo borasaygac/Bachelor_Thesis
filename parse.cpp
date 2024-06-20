@@ -38,8 +38,8 @@ bool parseDIMACS(std::string filename)
         // 4th elem of DIMACS is always the count of clauses,
         numOfClauses = stoi(tokens[3]);
 
-        printf("Number of variables: %i\n", numOfVars);
-        printf("Number of clauses: %i\n", numOfClauses);
+        //printf("Number of variables: %i\n", numOfVars);
+        //printf("Number of clauses: %i\n", numOfClauses);
 
         // Parse operations for the rest of the formula
 
@@ -54,7 +54,7 @@ bool parseDIMACS(std::string filename)
             vars[i].setValue(FREE);
         }
 
-        printf("size of vars: %i\n", vars.size());
+        //printf("size of vars: %i\n", vars.size());
 
         for (int i = 0; i < numOfClauses + 1; i++){ // set the index of the clause (1-indexed to m = numOfClauses)
             clauses[i].setIndex(i);
@@ -98,6 +98,10 @@ bool parseDIMACS(std::string filename)
             }
             //printf("\n");
         } 
+
+        for (int i = 1; i <= numOfVars; i++) {
+            vars[i].copyOccsToDynOccs();
+        }
     }
     else {
         throw runtime_error("Failed to open file " + filename);
