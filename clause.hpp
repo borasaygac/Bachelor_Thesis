@@ -35,6 +35,7 @@ public:
     void clauseAddElem(int v);
     int const getElemsSize() { return elements.size();};
     vector<Variable*> const getElems() {return elements;};
+    vector<int> literals;
 
     void incrementActive() { active++;};
     void decrementActive() { active--;};
