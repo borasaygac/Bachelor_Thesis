@@ -133,7 +133,7 @@ bool parseDIMACS(std::string filename)
     }
 
     // push pure literals to prop queue
-    for (int i = 1; i <= numOfVars; i++) {
+    /*for (int i = 1; i <= numOfVars; i++) {
         if (vars[i].getNegativeOccurrances().size() == 0 && vars[i].getPositiveOccurrances().size() > 0) {
             vars[std::abs(i)].setEnqueued(true);
             toPropagate.push(i);
@@ -142,6 +142,6 @@ bool parseDIMACS(std::string filename)
             vars[std::abs(i)].setEnqueued(true);
             toPropagate.push(-i);
         }
-    }
+    }*/
     return true;
 }
