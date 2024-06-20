@@ -12,9 +12,13 @@ extern int btc; // backtrack counter
 
 extern int curVar;
 
-std::stack<int> assig;
+extern int dc; // decision counter
 
-std::queue<int> toPropagate;
+extern std::stack<int> assig;
+
+extern std::queue<int> toPropagate;
+
+void chooseINC();
 
 void propagate();
 
