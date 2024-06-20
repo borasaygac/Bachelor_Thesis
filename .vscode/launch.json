@@ -35,7 +35,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/main.exe",
-            "args": ["001_count4_2_s.cnf"],
+            "args": ["024_tent2_2_u.cnf"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
