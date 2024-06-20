@@ -1,4 +1,4 @@
-#include "../globals.hpp"
+#include "../../globals.hpp"
 
 void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
 
@@ -20,6 +20,7 @@ void const printHornClauses(bool horn) {   // Print the Horn clauses for debuggi
     } else {
         printf("The formula is Horn because all clauses are Horn.\n");
     }
+    printf("\n\n");
 }
 
 

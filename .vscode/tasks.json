@@ -13,7 +13,8 @@
                 "-o",
                 "main.exe",
                 "*.cpp",
-                "Solvers/*.cpp"    
+                "Solvers/2-SAT/*.cpp",
+                "Solvers/Horn/*.cpp"
             ],
             "options": {
                 "cwd": ""
