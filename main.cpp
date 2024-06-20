@@ -121,7 +121,7 @@ int main (int argc, char *argv[]) {
     //print var assigs
     /*for (int i = 1; i <= numOfVars; i++) {
         printf("Variable %i: %i\n", i, vars[i].getValue());
-    }*/
+    } */
 
     bool sat = isFormulaSat();
 
