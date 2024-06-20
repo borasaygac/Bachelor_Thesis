@@ -9,6 +9,7 @@ using namespace std;
 
 int numOfVars = 0;
 int numOfClauses = 0;
+int numOfSatClauses = 0;
 vector<Variable> vars;
 vector<Clause> clauses;
 vector<vector<int>> cnf;
@@ -20,6 +21,7 @@ bool horn = false;
 bool nested = false;
 bool conested = false;
 bool nonInterlaced = false;
+bool backtrackFlag = false;
 
 
 

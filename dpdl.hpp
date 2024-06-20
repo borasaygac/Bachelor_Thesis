@@ -4,6 +4,10 @@
 #include <stack>
 #include <queue>
 
+extern int numOfSatClauses;
+
+extern bool backtrackFlag;
+
 std::stack<int> assig;
 
 std::queue<int> toPropagate;
