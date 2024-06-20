@@ -1,11 +1,11 @@
 #include "variable.hpp"
 #include <cstdlib>
 
-Variable::Variable(){ // constructor
+/*Variable::Variable(){ // constructor
     this -> pos_occ = 0;
     this -> neg_occ = 0;
     this -> tot_occ = 0; 
-}
+}*/
 
 Variable::~Variable(){ // destructor
 
@@ -43,9 +43,9 @@ void Variable::decNegOcc() { // decrease the negative occurance of the variable
 
 void Variable::addOccsToClause(int clause) { // adds which clauses the variable occurs in, positive or negative respectively 
     if (clause > 0) {
-        occursPosInClauses.push_back(clause);
+        occursPosInClauses.insert(clause);
     } else {
-        occursNegInClauses.push_back(abs(clause));
+        occursNegInClauses.insert(abs(clause));
     }
 }
 

@@ -4,6 +4,7 @@
 #define VARIABLE_HPP
 
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -16,10 +17,10 @@ private:
     int pos_occ;
     int neg_occ;
     int tot_occ;
-    vector<int> occursPosInClauses;
-    vector<int> dynamicOccursPosInClauses; // initially a copy of occursPosInClauses. Needed for 2-SAT
-    vector<int> occursNegInClauses;
-    vector<int> dynamicOccursNegInClauses; // initially a copy of occursNegInClauses. Needed for 2-SAT
+    set<int> dynamicOccursPosInClauses; // initially a copy of occursPosInClauses. Needed for 2-SAT
+    set<int> occursPosInClauses;
+    set<int> occursNegInClauses;
+    set<int> dynamicOccursNegInClauses; // initially a copy of occursNegInClauses. Needed for 2-SAT
     bool enqueued;
     bool forced;
 public:
@@ -48,14 +49,14 @@ public:
 
     void copyOccsToDynOccs();
 
-    vector<int> const getPositiveOccurrances() {return occursPosInClauses;};
-    vector<int> const getNegativeOccurrances() {return occursNegInClauses;};
+    set<int>& getPositiveOccurrances() {return occursPosInClauses;};
+    set<int>& getNegativeOccurrances() {return occursNegInClauses;};
 
-    void setDynamicPositiveOccurrances(vector<int> dynPos) {dynamicOccursPosInClauses = dynPos;};
-    void setDynamicNegativeOccurrances(vector<int> dynNeg) {dynamicOccursNegInClauses = dynNeg;};
+    void setDynamicPositiveOccurrances(set<int> dynPos) {dynamicOccursPosInClauses = dynPos;};
+    void setDynamicNegativeOccurrances(set<int> dynNeg) {dynamicOccursNegInClauses = dynNeg;};
 
-    vector<int> getDynamicPositiveOccurrances() {return dynamicOccursPosInClauses;};
-    vector<int> getDynamicNegativeOccurrances() {return dynamicOccursNegInClauses;};
+    set<int>& getDynamicPositiveOccurrances() {return dynamicOccursPosInClauses;};
+    set<int>& getDynamicNegativeOccurrances() {return dynamicOccursNegInClauses;};
 
     Assignment const getValue() {return value;};
     void setValue(Assignment val) {value = val;};
