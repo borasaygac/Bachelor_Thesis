@@ -1,5 +1,6 @@
 #include "parse.hpp"
 #include "clause.hpp"
+#include "dpdl.hpp"
 #include <cstring>
 
 using namespace std;
@@ -9,16 +10,15 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("DIMACS\\" + filename);
+    ifstream file("DIMACS/" + filename);
     string line;
 
-    if (file.is_open())
-    {
+    if (file.is_open()) {
+
         getline(file, line);
 
         // skip comment lines that start with c
-        while (line[0] == 'c')
-        {
+        while (line[0] == 'c' || line.empty()) {
             getline(file, line);
         }
 
@@ -65,20 +65,34 @@ bool parseDIMACS(std::string filename)
         int clauseCount = 1;
 
         vector<int> clause;
-        while (getline(file, line))
-        {
+        while (getline(file, line)) {
+
             istringstream iss(line);
             if (line[0] == 0)
                 continue;
 
             int literal;
-            while (iss >> literal && literal != 0)
-            { // if lit > 0 increase pos occ otherwise neg occ. Either way tot occ is updated.
-
+            while (iss >> literal && literal != 0) { // if lit > 0 increase pos occ otherwise neg occ. Either way tot occ is updated.
+                clauses[clauseCount].literals.push_back(literal);
                 (literal > 0) ? vars[abs(literal)].incPosOcc()
                               : vars[abs(literal)].incNegOcc();
 
                 clause.push_back(literal);
+            }
+
+            if (literal == 0) {
+                if (!clauses[clauseCount].literals.empty()) {
+                    
+                    // if unit clause, push to unit queue
+                    if (clauses[clauseCount].literals.size() == 1) {
+                        
+                        if (!vars[std::abs(clauses[clauseCount].literals[0])].getEnqueued()) {
+                            toPropagate.push(clauses[clauseCount].literals[0]);
+                            
+                            vars[std::abs(clauses[clauseCount].literals[0])].setEnqueued(true);
+                        }
+                    }
+                }
             }
 
             cnf.push_back(clause);
@@ -102,9 +116,10 @@ bool parseDIMACS(std::string filename)
         for (int i = 1; i <= numOfVars; i++) {
             vars[i].copyOccsToDynOccs();
         }
+        file.close();
     }
     else {
-        throw runtime_error("Failed to open file " + filename);
+        //throw runtime_error("Failed to open file " + filename);
 
         // Check for specific error conditions
         if (file.bad()) {
@@ -117,5 +132,16 @@ bool parseDIMACS(std::string filename)
         return false;
     }
 
+    // push pure literals to prop queue
+    for (int i = 1; i <= numOfVars; i++) {
+        if (vars[i].getNegativeOccurrances().size() == 0 && vars[i].getPositiveOccurrances().size() > 0) {
+            vars[std::abs(i)].setEnqueued(true);
+            toPropagate.push(i);
+        }
+        if (vars[i].getPositiveOccurrances().size() == 0 && vars[i].getNegativeOccurrances().size() > 0) {
+            vars[std::abs(i)].setEnqueued(true);
+            toPropagate.push(-i);
+        }
+    }
     return true;
 }
