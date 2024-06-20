@@ -36,6 +36,8 @@ int hornSolver();
 
 bool isTwoSat(int numOfClauses, vector<Clause> clauses);
 
+void* twoSatDPDL(void* arg);
+
 // Non Interlaced SAT Global Variables
 
 extern vector<pair<int,int>> deltaF;

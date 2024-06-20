@@ -2,6 +2,9 @@
 #include <stdexcept>
 #include <chrono>
 #include <string>
+#include <thread>
+#include <stack>
+#include <queue>
 #include "parse.hpp"
 #include "clause.hpp"
 
@@ -28,6 +31,8 @@ bool backtrackFlag = false;
 int dc = 0;
 int curVar = 1;
 int btc = 0;
+stack<int> assig;
+queue<int> toPropagate;
 
 
 int main (int argc, char *argv[]) {
@@ -88,8 +93,19 @@ int main (int argc, char *argv[]) {
         printf("\n");
         }
         hornSolver();
-    } else if (twosat) {
+    } else if (twosat = true) {
         // DPLL two sat
+        pthread_t thread;
+
+        if (pthread_create(&thread, NULL, twoSatDPDL,NULL)) {
+        std::cerr << "Error: Unable to create thread."
+                  << "\n";
+        std::cout.flush();
+        return -1;
+        }
+
+        pthread_join(thread, NULL);
+        
     } else if (nested) {
         // nested alg{
     } else if (conested) {
