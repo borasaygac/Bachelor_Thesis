@@ -1,5 +1,6 @@
 #include "parse.hpp"
 #include "clause.hpp"
+#include <cstring>
 
 using namespace std;
 
@@ -8,7 +9,7 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("DIMACS/" + filename);
+    ifstream file("DIMACS\\" + filename);
     string line;
 
     if (file.is_open())
@@ -98,9 +99,17 @@ bool parseDIMACS(std::string filename)
             //printf("\n");
         } 
     }
-    else
-    {
+    else {
         throw runtime_error("Failed to open file " + filename);
+
+        // Check for specific error conditions
+        if (file.bad()) {
+            throw runtime_error("Error reading file, badbit set on " + filename + ". Error no: " + strerror(errno));
+        } else if (file.fail()) {
+            throw runtime_error("Error reading file, failbit set on " + filename);
+        } else if (file.eof()) {
+            throw runtime_error("Error reading file, eofbit set on " + filename);
+        }
         return false;
     }
 
