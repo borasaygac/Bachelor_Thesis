@@ -34,6 +34,7 @@ public:
 
     ~Variable();
     void setIndex(int i);
+    int const getIndex() {return index;};
 
     void incPosOcc();
     void incNegOcc();
@@ -47,20 +48,23 @@ public:
 
     void copyOccsToDynOccs();
 
-    vector<int> getPositiveOccurrances() {return occursPosInClauses;};
-    vector<int> getNegativeOccurrances() {return occursNegInClauses;};
+    vector<int> const getPositiveOccurrances() {return occursPosInClauses;};
+    vector<int> const getNegativeOccurrances() {return occursNegInClauses;};
+
+    void setDynamicPositiveOccurrances(vector<int> dynPos) {dynamicOccursPosInClauses = dynPos;};
+    void setDynamicNegativeOccurrances(vector<int> dynNeg) {dynamicOccursNegInClauses = dynNeg;};
 
     vector<int> getDynamicPositiveOccurrances() {return dynamicOccursPosInClauses;};
     vector<int> getDynamicNegativeOccurrances() {return dynamicOccursNegInClauses;};
 
-    Assignment getValue() {return value;};
+    Assignment const getValue() {return value;};
     void setValue(Assignment val) {value = val;};
 
     void setEnqueued(bool enq) {enqueued = enq;};
-    bool getEnqueued() {return enqueued;};
+    bool const getEnqueued() {return enqueued;};
 
     void setForced(bool f) {forced = f;};
-    bool getForced() {return forced;};
+    bool const getForced() {return forced;};
 };
 
 
