@@ -48,3 +48,8 @@ void Variable::addOccsToClause(int clause) { // adds which clauses the variable 
         occursNegInClauses.push_back(abs(clause));
     }
 }
+
+void Variable::copyOccsToDynOccs() {
+    this -> dynamicOccursPosInClauses = occursPosInClauses;
+    this -> dynamicOccursNegInClauses = occursNegInClauses;
+}
