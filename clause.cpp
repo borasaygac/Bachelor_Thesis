@@ -10,8 +10,7 @@ Clause::~Clause()
 }
 
 
-void Clause::clauseAddElem(int v)
-{
+void Clause::clauseAddElem(int v) {
 
     this->elements.push_back(&vars[abs(v)]);
 
@@ -28,11 +27,9 @@ void Clause::clauseAddElem(int v)
 }
 
 
-bool Clause::IsClauseHorn(int index)
-{ // A clause is Horn if it has at most one positive literal
+bool Clause::IsClauseHorn(int index) { // A clause is Horn if it has at most one positive literal
 
-    if (clauses[index].clausePosOcc <= 1)
-    {
+    if (clauses[index].clausePosOcc <= 1) {
         clauses[index].isHorn = true;
     } else {
         clauses[index].isHorn  = false;
@@ -40,6 +37,13 @@ bool Clause::IsClauseHorn(int index)
     return clauses[index].isHorn ;
 }
 
+bool Clause::IsClauseTwoSat(int index) { // A clause is 2-SAT if it has exactly two literals
+
+    clauses[index].getElemsSize() == 2 ? clauses[index].istwoSat = true :
+                                         clauses[index].istwoSat = false;
+    
+    return clauses[index].istwoSat;
+}
 
 bool const Clause::evaluateClause() {
     for (int i = 0; i < this->elements.size(); i++) {

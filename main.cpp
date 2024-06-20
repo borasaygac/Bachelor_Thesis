@@ -49,7 +49,7 @@ int main (int argc, char *argv[]) {
 
     // Check if the formula is 2-SAT
 
-    //twosat = isTwoSat(numOfClauses, clauses);
+    twosat = isTwoSat(numOfClauses, clauses);
 
     // Check if the formula is nested
 

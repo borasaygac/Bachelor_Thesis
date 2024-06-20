@@ -31,6 +31,11 @@ extern vector<Clause> unitClauses;
 
 int hornSolver();
 
+
+// 2-SAT Global Variables and Functions
+
+bool isTwoSat(int numOfClauses, vector<Clause> clauses);
+
 // Non Interlaced SAT Global Variables
 
 extern vector<pair<int,int>> deltaF;

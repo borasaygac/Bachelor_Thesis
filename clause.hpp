@@ -12,12 +12,14 @@ private:
     int index;
     std::vector<Variable*> elements;
     bool isHorn;
+    bool istwoSat;
     int clausePosOcc;
     int clauseNegOcc;
     
 public:
     Clause() {
         this->isHorn = false;
+        this->istwoSat = false;
         this->clausePosOcc = 0;
         this->clauseNegOcc = 0;
     };
@@ -26,6 +28,7 @@ public:
     void clauseAddElem(int v);
     int const getElemsSize() { return elements.size(); }
     bool IsClauseHorn(int index);
+    bool IsClauseTwoSat(int index);
     bool const getIsHorn() { return isHorn; }
     int const getIndex() { return index; }
     bool const evaluateClause();
