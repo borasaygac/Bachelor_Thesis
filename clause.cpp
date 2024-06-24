@@ -38,9 +38,9 @@ bool Clause::IsClauseHorn(int index) { // A clause is Horn if it has at most one
     return clauses[index].isHorn ;
 }
 
-bool Clause::IsClauseTwoSat(int index) { // A clause is 2-SAT if it has exactly two literals
+bool Clause::IsClauseTwoSat(int index) { // A clause is 2-SAT if it has at most two literals
 
-    clauses[index].getElemsSize() == 2 ? clauses[index].istwoSat = true :
+    clauses[index].getElemsSize() <= 2 ? clauses[index].istwoSat = true :
                                          clauses[index].istwoSat = false;
     
     return clauses[index].istwoSat;
