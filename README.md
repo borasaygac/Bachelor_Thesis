@@ -1,9 +1,9 @@
 # Thesis
 
 Order of checking 
-1. Horn
-2. 2-SAT
-3. Nested
+1. Horn --implemented
+2. 2-SAT -- implemented
+3. Nested -- next to be implemented
 4. CoNested
 5. Non Interlaced
 
