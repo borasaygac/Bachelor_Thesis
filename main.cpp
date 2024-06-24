@@ -93,7 +93,7 @@ int main (int argc, char *argv[]) {
         printf("\n");
         }
         hornSolver();
-    } else if (twosat = true) {
+    } else if (twosat) {
         // DPLL two sat
         pthread_t thread;
 
@@ -116,6 +116,7 @@ int main (int argc, char *argv[]) {
         // Does not fit any of the above
 
         // DPLL
+        // Note: In this case call minisat
     }
     
     //print var assigs
