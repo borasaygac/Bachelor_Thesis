@@ -39,7 +39,15 @@ void* twoSatDPDL(void* arg);
 
 // Nested SAT Global Variables
 
-vector<int> nestedPreOrder(vector<int> &clause);
+extern vector<vector<int>> orderedCNF;
+
+void createOrderedCNF();
+
+vector<int> nestedClausePreOrder(vector<int> &clause);
+
+bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseTwo);
+
+bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseTwo);
 
 // Non Interlaced SAT Global Variables
 

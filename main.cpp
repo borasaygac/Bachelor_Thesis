@@ -66,9 +66,13 @@ int main (int argc, char *argv[]) {
 
     // Check if the formula is nested
 
-    for (int i = 0; i <= numOfClauses; i++) {
-        nestedPreOrder(cnf[i]);
-    }
+    createOrderedCNF(); 
+
+    
+
+    //doesClauseOneStraddleClauseTwo(cnf[1], cnf[2]);
+
+    //doesClauseTwoStraddleClauseOne(cnf[1], cnf[2]);
     
 
     // Check if the formula is conested
