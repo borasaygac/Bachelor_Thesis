@@ -10,7 +10,7 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("DIMACS/" + filename);
+    ifstream file("CompTests/" + filename);
     string line;
 
     if (file.is_open()) {

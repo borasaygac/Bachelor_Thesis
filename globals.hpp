@@ -31,12 +31,15 @@ extern vector<Clause> unitClauses;
 
 int hornSolver();
 
-
 // 2-SAT Global Variables and Functions
 
 bool isTwoSat(int numOfClauses, vector<Clause> clauses);
 
 void* twoSatDPDL(void* arg);
+
+// Nested SAT Global Variables
+
+vector<int> nestedPreOrder(vector<int> &clause);
 
 // Non Interlaced SAT Global Variables
 

@@ -57,7 +57,7 @@ int main (int argc, char *argv[]) {
     // Check if the formula is Horn 
     horn = isHornFormula(numOfClauses, clauses); 
 
-    printHornClauses(horn); // print the non-horn clauses if formula not horn (DEBUG)
+    printHornClauses(horn); // print the non-horn clauses if formula not horn (for DEBUG)
 
     // Check if the formula is 2-SAT
 
@@ -65,6 +65,11 @@ int main (int argc, char *argv[]) {
     printf("Is 2-SAT: %i\n", twosat);
 
     // Check if the formula is nested
+
+    for (int i = 0; i <= numOfClauses; i++) {
+        nestedPreOrder(cnf[i]);
+    }
+    
 
     // Check if the formula is conested
 
