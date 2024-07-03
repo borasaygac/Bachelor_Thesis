@@ -10,7 +10,7 @@ using namespace std;
 bool parseDIMACS(std::string filename)
 {
 
-    ifstream file("CompTests/" + filename);
+    ifstream file(filename);
     string line;
 
     if (file.is_open()) {
@@ -93,13 +93,12 @@ bool parseDIMACS(std::string filename)
                         }
                     }
                 }
+                cnf.push_back(clause);
+
+                if (clause.size() == 1) unitClauseCount++;
+                clause = {};
+                clauseCount++;
             }
-
-            cnf.push_back(clause);
-
-            if (clause.size() == 1) unitClauseCount++;
-            clause = {};
-            clauseCount++;
         }
 
         for (int i = 1; i < numOfClauses + 1; i++) {
@@ -116,6 +115,7 @@ bool parseDIMACS(std::string filename)
         for (int i = 1; i <= numOfVars; i++) {
             vars[i].copyOccsToDynOccs();
         }
+
         file.close();
     }
     else {

@@ -43,6 +43,8 @@ extern vector<vector<int>> orderedCNF;
 
 void createOrderedCNF();
 
+bool isNested();
+
 vector<int> nestedClausePreOrder(vector<int> &clause);
 
 bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseTwo);

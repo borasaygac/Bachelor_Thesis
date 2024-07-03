@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
 
     createOrderedCNF(); 
 
-    
+    isNested();
 
     //doesClauseOneStraddleClauseTwo(cnf[1], cnf[2]);
 
@@ -78,7 +78,7 @@ int main (int argc, char *argv[]) {
     // Check if the formula is conested
 
     // Check if the formula is non-interlaced
-    createDeltaF(); // create deltaF vector
+    //createDeltaF(); // create deltaF vector
 
     //print deltaF
     /* printf("DeltaF: ");
@@ -87,7 +87,7 @@ int main (int argc, char *argv[]) {
     }
     printf("\n"); */
 
-    isFNonInterlaced(); // check if the formula is non-interlaced
+    //isFNonInterlaced(); // check if the formula is non-interlaced
 
     // The big if-else block to determine which algorithm to use
     if (horn) {
