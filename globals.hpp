@@ -41,6 +41,12 @@ void* twoSatDPDL(void* arg);
 
 extern vector<vector<int>> orderedCNF;
 
+extern vector<int> lits;
+
+extern vector<int> start;
+
+void fillLiteralsAndStart();
+
 void createOrderedCNF();
 
 bool isNested();
