@@ -70,6 +70,8 @@ int main (int argc, char *argv[]) {
 
     isNested();
 
+    fillLiteralsAndStart();
+
     //doesClauseOneStraddleClauseTwo(cnf[1], cnf[2]);
 
     //doesClauseTwoStraddleClauseOne(cnf[1], cnf[2]);

@@ -6,6 +6,10 @@
 
 vector<vector<int>> orderedCNF;
 
+vector<int> lits;
+
+vector<int> start;
+
 struct nestedLess {
     bool operator()(int a, int b) const {
         return abs(a) < abs(b);
@@ -79,6 +83,7 @@ bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseT
     
 }
 
+// This function is redundant and can be removed -- currently for debug purposes
 bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseTwo) {
 
     for (int first = 0; first < clauseTwo.size(); ++first) {
@@ -99,3 +104,23 @@ bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseT
     return false;
 }
 
+void fillLiteralsAndStart() {
+    int startcounter = 0;
+    for (int i = 1; i < orderedCNF.size(); i++) {
+        start.push_back(startcounter);
+        startcounter += orderedCNF[i].size();
+        for (int j = 0; j < orderedCNF[i].size(); j++) {
+            lits.push_back(orderedCNF[i][j]);
+        }
+    }
+
+    for (auto elem: lits) {
+        printf("%i ", elem);
+    }
+    printf("\n");
+
+    for(auto elem: start) {
+        printf("%i ", elem);
+    }
+    printf("\n");
+}
