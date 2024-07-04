@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
 
     createOrderedCNF(); 
 
-    isNested();
+    nested = isNested();
 
     fillLiteralsAndStart();
 
@@ -118,7 +118,9 @@ int main (int argc, char *argv[]) {
         pthread_join(thread, NULL);
         
     } else if (nested) {
-        // nested alg{
+
+        nestedSolver();
+        
     } else if (conested) {
         // conested alg
     } else if (nonInterlaced){

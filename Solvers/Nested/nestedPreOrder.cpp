@@ -10,6 +10,8 @@ vector<int> lits;
 
 vector<int> start;
 
+
+
 struct nestedLess {
     bool operator()(int a, int b) const {
         return abs(a) < abs(b);
@@ -123,4 +125,84 @@ void fillLiteralsAndStart() {
         printf("%i ", elem);
     }
     printf("\n");
+}
+
+void nestedSolver() {
+
+    int next[numOfVars];
+
+    for (int i = 0; i <= numOfVars; i++) {
+        next[i] = i+1;
+    }
+
+    int sat[numOfVars+1][2][2];
+
+    for (int i = 0; i <= numOfVars; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                sat[i][j][k] = 1;
+            }
+        }
+    }   
+
+    for (int i = 1; i < numOfClauses + 1; i++) {
+        int l = abs(lits[start[i]]);
+        int r = abs(lits[start[i + 1] - 1]);
+        
+        int j = start[i];
+        int sig = lits[j];
+        int x = abs(sig);
+
+        int newsat[2][2];
+        newsat[0][0] = 1;
+        newsat[1][1] = 1;
+        newsat[0][1] = 0;
+        newsat[1][0] = 0;
+
+        while(true) {
+            if (x == abs(sig)){
+                // Upgrade newsat from 1 to 2 if possible
+                int t = (x == sig) ? 1 : 0;
+                for (int s = 0; s < 2; s++) {
+                    if (newsat[s][t] == 1) newsat[s][t] = 2;
+                }
+
+                j++;
+                sig = lits[j] > 0 ? 1 : 0;
+                if (j == start[i + 1]) break;
+            
+
+                // Modify newsat for the next x value
+                int tmp[2][2];
+                for (int s = 0; s < 2; s++) { //init tmp
+                    for (int t = 0; t < 2; t++) {
+                        tmp[s][t] = max(newsat[s][0] * sat[x][0][t], 
+                                        newsat[s][1] * sat[x][1][t]);
+                    }
+                }   
+
+                for (int s = 0; s < 2; s++) { //init tmp
+                    for (int t = 0; t < 2; t++) {
+                        newsat[s][t] = tmp[s][t];
+                    }
+                }
+
+                
+            }
+            x = next[x];
+        }
+
+        next[l] = r;
+
+        for (int s = 0; s < 2; s++) {
+            for (int t = 0; t < 2; t++) {
+                sat[l][s][t] = newsat[s][t] / 2;
+            }
+        }
+    }
+    if (sat[0][1][1] == 1) {
+        printf("The formula is satisfiable\n");
+    } else {
+        printf("The formula is not satisfiable\n");
+    }
 }
