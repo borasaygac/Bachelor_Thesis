@@ -70,8 +70,6 @@ int main (int argc, char *argv[]) {
 
     nested = isNested();
 
-    fillLiteralsAndStart();
-
     //doesClauseOneStraddleClauseTwo(cnf[1], cnf[2]);
 
     //doesClauseTwoStraddleClauseOne(cnf[1], cnf[2]);
@@ -118,6 +116,8 @@ int main (int argc, char *argv[]) {
         pthread_join(thread, NULL);
         
     } else if (nested) {
+
+        fillLiteralsAndStart();
 
         nestedSolver();
         

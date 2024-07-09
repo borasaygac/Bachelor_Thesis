@@ -51,6 +51,8 @@ void createOrderedCNF();
 
 bool isNested();
 
+void nestedSolver();
+
 vector<int> nestedClausePreOrder(vector<int> &clause);
 
 bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseTwo);

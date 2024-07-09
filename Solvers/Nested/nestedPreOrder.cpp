@@ -10,6 +10,14 @@ vector<int> lits;
 
 vector<int> start;
 
+vector<int> nextR;
+
+vector<int> startR;
+
+vector<vector<vector<int>>> satTable;
+
+vector<vector<int>> newsat;
+
 
 
 struct nestedLess {
@@ -108,13 +116,16 @@ bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseT
 
 void fillLiteralsAndStart() {
     int startcounter = 0;
-    for (int i = 1; i < orderedCNF.size(); i++) {
+    for (int i = 0; i < orderedCNF.size(); i++) {
         start.push_back(startcounter);
         startcounter += orderedCNF[i].size();
         for (int j = 0; j < orderedCNF[i].size(); j++) {
             lits.push_back(orderedCNF[i][j]);
         }
     }
+    // add the extra dummy clause
+    start.push_back(startcounter);
+    //lits.push_back(0);
 
     for (auto elem: lits) {
         printf("%i ", elem);
@@ -126,21 +137,75 @@ void fillLiteralsAndStart() {
     }
     printf("\n");
 }
+// refactored nested solver
+
+void modifyNewSatTable(int x) {
+    int tmp[2][2];
+                for (int s = 0; s < 2; s++) { //init tmp
+                    for (int t = 0; t < 2; t++) {
+                        tmp[s][t] = max(newsat[s][0] * satTable[x][0][t], 
+                                        newsat[s][1] * satTable[x][1][t]);
+                    }
+                }   
+
+                for (int s = 0; s < 2; s++) { 
+                    for (int t = 0; t < 2; t++) {
+                        newsat[s][t] = tmp[s][t];
+                    }
+                }
+}
+
+void upgradeFromOneToTwo(int x, int sig) {
+    int t = (x == sig) ? 1 : 0;
+    for (int s = 0; s < 2; s++) {
+        if (newsat[s][t] == 1) newsat[s][t] = 2;
+    }
+}
+
+void computeNewSatTable(int i, int next[]) {
+
+    int j = start[i];
+    int sig = lits[j];
+    int x = abs(sig);
+
+    
+    newsat[0][0] = 1;
+    newsat[1][1] = 1;
+    newsat[0][1] = 0;
+    newsat[1][0] = 0;
+
+    while(true) {
+            if (x == abs(sig)){
+                // Upgrade newsat from 1 to 2 if possible
+                upgradeFromOneToTwo(x, sig);
+
+                j++;
+                sig = lits[j];
+                if (j == start[i + 1]) break;
+            }
+            
+            modifyNewSatTable(x);
+                // Modify newsat for the next x value
+                
+            x = next[x];
+        }
+}
 
 void nestedSolver() {
 
     int next[numOfVars];
+    newsat = vector<vector<int>>(2, vector<int>(2));
+
+    satTable = vector<vector<vector<int>>>(numOfVars + 1, vector<vector<int>>(2, vector<int>(2)));
 
     for (int i = 0; i <= numOfVars; i++) {
         next[i] = i+1;
     }
 
-    int sat[numOfVars+1][2][2];
-
     for (int i = 0; i <= numOfVars; i++) {
         for (int j = 0; j < 2; j++) {
             for (int k = 0; k < 2; k++) {
-                sat[i][j][k] = 1;
+                satTable[i][j][k] = 1;
             }
         }
     }   
@@ -148,61 +213,21 @@ void nestedSolver() {
     for (int i = 1; i < numOfClauses + 1; i++) {
         int l = abs(lits[start[i]]);
         int r = abs(lits[start[i + 1] - 1]);
-        
-        int j = start[i];
-        int sig = lits[j];
-        int x = abs(sig);
 
-        int newsat[2][2];
-        newsat[0][0] = 1;
-        newsat[1][1] = 1;
-        newsat[0][1] = 0;
-        newsat[1][0] = 0;
-
-        while(true) {
-            if (x == abs(sig)){
-                // Upgrade newsat from 1 to 2 if possible
-                int t = (x == sig) ? 1 : 0;
-                for (int s = 0; s < 2; s++) {
-                    if (newsat[s][t] == 1) newsat[s][t] = 2;
-                }
-
-                j++;
-                sig = lits[j] > 0 ? 1 : 0;
-                if (j == start[i + 1]) break;
-            
-
-                // Modify newsat for the next x value
-                int tmp[2][2];
-                for (int s = 0; s < 2; s++) { //init tmp
-                    for (int t = 0; t < 2; t++) {
-                        tmp[s][t] = max(newsat[s][0] * sat[x][0][t], 
-                                        newsat[s][1] * sat[x][1][t]);
-                    }
-                }   
-
-                for (int s = 0; s < 2; s++) { //init tmp
-                    for (int t = 0; t < 2; t++) {
-                        newsat[s][t] = tmp[s][t];
-                    }
-                }
-
-                
-            }
-            x = next[x];
-        }
-
+        computeNewSatTable(i, next);
         next[l] = r;
 
         for (int s = 0; s < 2; s++) {
             for (int t = 0; t < 2; t++) {
-                sat[l][s][t] = newsat[s][t] / 2;
+                satTable[l][s][t] = newsat[s][t] / 2;
             }
         }
     }
-    if (sat[0][1][1] == 1) {
+
+    if (satTable[0][1][1] == 1) {
         printf("The formula is satisfiable\n");
     } else {
         printf("The formula is not satisfiable\n");
     }
 }
+
