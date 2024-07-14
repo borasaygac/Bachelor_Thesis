@@ -1,6 +1,8 @@
 #include <cstdlib>
+#include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <thread>
 #include "../../globals.hpp"
 
 
