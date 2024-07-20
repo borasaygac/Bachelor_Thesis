@@ -59,6 +59,12 @@ bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseT
 
 bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseTwo);
 
+// Co-Nested SAT Global Variables
+
+void copyCNF();
+
+void callPythonScript();
+
 // Non Interlaced SAT Global Variables
 
 extern vector<pair<int,int>> deltaF;
