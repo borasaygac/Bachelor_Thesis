@@ -1,16 +1,26 @@
 import networkx as nx
 
-def check_planarity():
+def check_planarity(cnf):
     # Define the graph
     G = nx.Graph()
 
-    # Number of variables and clauses
-    num_variables = 7
-    num_clauses = 8
+    unique_variables = set()
 
-    # Add variable-to-variable edges
-    variable_edges = [(0, 1), (1, 2), (2, 3), (3, 4), (4, 5), (5, 6)]
-    G.add_edges_from(variable_edges)
+    # Get the number of clauses and variables
+    for clause in cnf:
+        for variable in clause:
+            unique_variables.add(abs(variable))
+
+    num_clauses = len(cnf) - 1
+    num_variables = len(unique_variables)
+
+    #print("Number of clauses:", num_clauses)
+    #print("Number of variables:", num_variables)
+
+    # Add clause-to-clause edges
+    for i in range(1, num_clauses):
+        print("Adding edge between", i, "and", i+1)
+        G.add_edge(i, i+1)
 
     # Add clause-to-variable edges
     clause_edges = [
