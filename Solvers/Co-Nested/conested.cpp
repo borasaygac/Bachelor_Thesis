@@ -17,7 +17,7 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
 
     // Define the Python script to be executed
     const char* scriptName = "planarity_check";
-    const char* functionName = "check_planarity";
+    const char* functionName = "check_planarity_for_all_permutations";
 
     //// Add the current directory and the Solvers/Co-Nested directory to the Python path
     PyRun_SimpleString("import sys");
@@ -54,16 +54,18 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
 
             if (pValue != nullptr) {
                 // Convert the Python lis of list back to C++ vector of vectors
+                printf("Result: \n");
                 vector<vector<int>> result;
+                printf("pyobj Size: %i\n", PyList_Size(pValue));
                 if (PyList_Check(pValue)) {
-                    for (int i = 0; i < PyList_Size(pValue); i++) {
-                        PyObject* pInnerList = PyList_GetItem(pValue, i);
-                        if(PyList_Check(pInnerList)) {
-                            vector<int> innerList;
-                            for (int j = 0; j < PyList_Size(pInnerList); j++){
-                                innerList.push_back(PyLong_AsLong(PyList_GetItem(pInnerList, j)));
+                    for (Py_ssize_t i = 0; i < PyList_Size(pValue); ++i) {
+                        PyObject* pSubList = PyList_GetItem(pValue, i);
+                        if (PyList_Check(pSubList)) {
+                            vector<int> subVector;
+                            for (Py_ssize_t j = 0; j < PyList_Size(pSubList); ++j) {
+                                subVector.push_back(PyLong_AsLong(PyList_GetItem(pSubList, j)));
                             }
-                            result.push_back(innerList);
+                            result.push_back(subVector);
                         }
                     }
                 }
