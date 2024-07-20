@@ -63,7 +63,9 @@ bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseT
 
 void copyCNF();
 
-void callPythonScript();
+extern vector<vector<int>> coNestedCNF;
+
+void callPythonScript(const vector<vector<int>>& coNestedCNF);
 
 // Non Interlaced SAT Global Variables
 

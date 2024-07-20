@@ -10,7 +10,7 @@ void copyCNF() {
     coNestedCNF = cnf;
 }
 
-void callPythonScript() {
+void callPythonScript(const vector<vector<int>>& coNestedCNF) {
     // Initialize the Python interpreter
     std::cout << std::filesystem::current_path() << std::endl;
     Py_Initialize();
@@ -19,7 +19,7 @@ void callPythonScript() {
     const char* scriptName = "planarity_check";
     const char* functionName = "check_planarity";
 
-    // Add the current directory to the Python path
+    //// Add the current directory and the Solvers/Co-Nested directory to the Python path
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\".\")");
     PyRun_SimpleString("sys.path.append(\"Solvers/Co-Nested\")");
@@ -34,16 +34,49 @@ void callPythonScript() {
         PyObject* pFunc = PyObject_GetAttrString(pModule, functionName);
 
         if (pFunc && PyCallable_Check(pFunc)) {
-            // Call the function
-            PyObject* pValue = PyObject_CallObject(pFunc, nullptr);
-            if (pValue != nullptr) {
-                // Print the result
-                int result = PyObject_IsTrue(pValue);
-                if (result) {
-                    std::cout << "The graph is planar." << std::endl;
-                } else {
-                    std::cout << "The graph is not planar." << std::endl;
+
+            // Convert the CNF to a Python list
+            PyObject* pList = PyList_New(coNestedCNF.size());
+            for (int i = 0; i < coNestedCNF.size(); i++) {
+                PyObject* pInnerList = PyList_New(coNestedCNF[i].size());
+                for (int j = 0; j < coNestedCNF[i].size(); j++) {
+                    PyList_SetItem(pInnerList, j, PyLong_FromLong(coNestedCNF[i][j]));
                 }
+                PyList_SetItem(pList, i, pInnerList);
+            }
+
+            // Call the Python function with the list as an argument
+            PyObject* pArgs = PyTuple_Pack(1, pList);
+            PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
+            Py_DECREF(pArgs);
+            Py_DECREF(pList);
+
+
+            if (pValue != nullptr) {
+                // Convert the Python lis of list back to C++ vector of vectors
+                vector<vector<int>> result;
+                if (PyList_Check(pValue)) {
+                    for (int i = 0; i < PyList_Size(pValue); i++) {
+                        PyObject* pInnerList = PyList_GetItem(pValue, i);
+                        if(PyList_Check(pInnerList)) {
+                            vector<int> innerList;
+                            for (int j = 0; j < PyList_Size(pInnerList); j++){
+                                innerList.push_back(PyLong_AsLong(PyList_GetItem(pInnerList, j)));
+                            }
+                            result.push_back(innerList);
+                        }
+                    }
+                }
+
+
+                // Print the result
+                for (const auto& vec: result){
+                    for (const auto& elem: vec){
+                        std::cout << elem << " ";
+                    }
+                    std::cout << std::endl;
+                }
+
                 Py_DECREF(pValue);
             } else {
                 PyErr_Print();
