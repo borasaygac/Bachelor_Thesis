@@ -69,7 +69,7 @@ bool isNested() {
             }
         }
     }
-    printf("The formula is nested\n");
+    printf("The formula is nested\n\n");
     return true;
 }
 
