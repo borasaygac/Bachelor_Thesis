@@ -1,4 +1,8 @@
-CXXFLAGS = -Wall -fdiagnostics-color=always -Wno-sign-compare -Wno-format -g -O3
+CXXFLAGS = -Wall -fdiagnostics-color=always -Wno-sign-compare -Wno-format \
+            -L"C:\Users\boras\AppData\Local\Programs\Python\Python312\libs" \
+            -lpython312 \
+            -I"C:\Users\boras\AppData\Local\Programs\Python\Python312\include" \
+            -g -O3
 
 # Directories
 SRCDIR = .
@@ -9,17 +13,18 @@ BINDIR = .
 SOURCES = $(wildcard *.cpp) \
           $(wildcard Solvers/2-SAT/*.cpp) \
           $(wildcard Solvers/Horn/*.cpp) \
-          $(wildcard Solvers/Nested/*.cpp)
+          $(wildcard Solvers/Nested/*.cpp) \
+          $(wildcard Solvers/Co-Nested/*.cpp)
 EXECUTABLE = main
 
 # Build target
 all: $(EXECUTABLE)
 
 # Rule to create executable
-$(EXECUTABLE):
+$(EXECUTABLE): $(SOURCES)
 	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)
 
 .PHONY: clean
 
 clean:
-	del /Q *.o Solvers\2-SAT\*.o Solvers\Horn\*.o Solvers\Nested\*.o main.exe
+	del /Q main.exe
