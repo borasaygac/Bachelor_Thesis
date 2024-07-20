@@ -1,9 +1,10 @@
-CXXFLAGS = -Wall -fdiagnostics-color=always -Wno-sign-compare -Wno-format \
-            -L"C:\Users\boras\AppData\Local\Programs\Python\Python312\libs" \
-            -lpython312 \
-            -I"C:\Users\boras\AppData\Local\Programs\Python\Python312\include" \
-            -g -O3
+CXXFLAGS = -Wall -fdiagnostics-color=always -Wno-sign-compare -Wno-format -g -O3
+PYTHON_INCLUDE = C:/Users/boras/AppData/Local/Programs/Python/Python312/include
+PYTHON_LIB = C:/Users/boras/AppData/Local/Programs/Python/Python312/libs
+PYTHON_VERSION = 312
 
+LDFLAGS = -L$(PYTHON_LIB) -lpython$(PYTHON_VERSION)
+INCLUDES = -I$(PYTHON_INCLUDE)
 # Directories
 SRCDIR = .
 INCDIR = include
@@ -22,7 +23,7 @@ all: $(EXECUTABLE)
 
 # Rule to create executable
 $(EXECUTABLE): $(SOURCES)
-	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(EXECUTABLE)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(SOURCES) $(LDFLAGS) -o $(EXECUTABLE)
 
 .PHONY: clean
 

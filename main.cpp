@@ -80,6 +80,10 @@ int main (int argc, char *argv[]) {
     //isFNonInterlaced(); // check if the formula is non-interlaced */
 
     // The big if-else block to determine which algorithm to use
+    horn = false;
+    twosat = false;
+    nested = false;
+    conested = true;
     if (horn) {
         if (unitClauses.empty()){
             printf("No unit clauses!\n");
@@ -113,6 +117,7 @@ int main (int argc, char *argv[]) {
         
     } else if (conested) {
         // conested alg
+        //callPythonScript();
     } else if (nonInterlaced){
         //nonInterlacedSolver();
     } else {
