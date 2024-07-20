@@ -9,12 +9,17 @@
                 "-Wall",
                 "-Wno-sign-compare",
                 "-Wno-format",
+                "-L'C:/Users/boras/AppData/Local/Programs/Python/Python312/libs'",
+                "-lpython312",
+                "-I'C:/Users/boras/AppData/Local/Programs/Python/Python312/include'",
                 "-g",
                 "-o",
                 "main.exe",
                 "*.cpp",
                 "Solvers/2-SAT/*.cpp",
-                "Solvers/Horn/*.cpp"
+                "Solvers/Horn/*.cpp",
+                "Solvers/Nested/*.cpp",
+                "Solvers/Co-Nested/*.cpp"
             ],
             "options": {
                 "cwd": ""
