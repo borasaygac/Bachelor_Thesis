@@ -1,5 +1,77 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import itertools
+
+def construct_graph_from_cnf(cnf):
+    G = nx.Graph()
+
+    unique_variables = set()
+
+    # Get the number of clauses and variables
+    for clause in cnf:
+        for variable in clause:
+            unique_variables.add(abs(variable))
+
+    num_clauses = len(cnf) - 1
+    num_variables = len(unique_variables)
+
+    #print("Number of clauses:", num_clauses)
+    #print("Number of variables:", num_variables)
+
+    # Add clause-to-clause edges
+    clause_to_clause_edges = []
+    for i in range(1, num_clauses):
+        clause_to_clause_edges.append((i, i+1))
+        print("Adding edge between", i, "and", i+1)
+
+    # Add clause-to-variable edges
+    clause_to_var_edges = []
+    for i, clause in enumerate(cnf):
+        for variable in clause:
+            clause_to_var_edges.append((i, abs(variable) + num_clauses))
+            print("Adding edge between", i, "and", abs(variable))
+
+    # Add the edges to the graph
+    G.add_edges_from(clause_to_clause_edges)
+    G.add_edges_from(clause_to_var_edges)
+    # Add a dummy node to check for planarity - if planar then G is outerplanar
+    G.add_node(num_clauses+num_variables + 1)
+    outerplanar_edges = []
+    for i in range(1, num_clauses+num_variables):
+        outerplanar_edges.append((i, num_clauses+num_variables + 1))
+
+    return G
+
+def is_graph_planar(G):
+    
+    # Check for planarity
+    is_planar, _ = nx.check_planarity(G)
+
+    return is_planar
+
+def check_planarity_for_all_permutations(cnf):
+    
+    for r in range(1, len(cnf) + 1):
+        for permutation in itertools.permutations(cnf):
+            
+            # Construct the graph
+            G = construct_graph_from_cnf(permutation)
+
+            # Check for planarity
+            is_planar = is_graph_planar(G)
+
+            print(f"CNF Structure: {cnf}")
+            print(f"CNF Length: {len(cnf)}")
+            print("Combiation size is", r)
+            print(f"Permutation: {permutation}, Planar: {'Yes' if is_planar else 'No'}")
+            # Store the result
+            #results[tuple(combination)] = is_planar
+            if is_planar:
+                print(f"Type of permutation: {type(permutation)}")
+                return list(permutation)
+
+    
+
 
 def draw_graph(cnf):
     # Draw the graph
@@ -43,50 +115,7 @@ def draw_graph(cnf):
 
     plt.show()
 
-def check_planarity(cnf):
-    # Define the graph
-    G = nx.Graph()
 
-    unique_variables = set()
-
-    # Get the number of clauses and variables
-    for clause in cnf:
-        for variable in clause:
-            unique_variables.add(abs(variable))
-
-    num_clauses = len(cnf) - 1
-    num_variables = len(unique_variables)
-
-    #print("Number of clauses:", num_clauses)
-    #print("Number of variables:", num_variables)
-
-    # Add clause-to-clause edges
-    clause_to_clause_edges = []
-    for i in range(1, num_clauses):
-        clause_to_clause_edges.append((i, i+1))
-        print("Adding edge between", i, "and", i+1)
-
-    # Add clause-to-variable edges
-    clause_to_var_edges = []
-    for i, clause in enumerate(cnf):
-        for variable in clause:
-            clause_to_var_edges.append((i, abs(variable) + num_clauses))
-            print("Adding edge between", i, "and", abs(variable))
-
-    # Add the edges to the graph
-    G.add_edges_from(clause_to_clause_edges)
-    G.add_edges_from(clause_to_var_edges)
-    # Add a dummy node to check for planarity - if planar then G is outerplanar
-    G.add_node(num_clauses+num_variables + 1)
-    outerplanar_edges = []
-    for i in range(1, num_clauses+num_variables):
-        outerplanar_edges.append((i, num_clauses+num_variables + 1))
-
-    # Check for planarity
-    is_planar, _ = nx.check_planarity(G)
-
-    draw_graph(cnf)
-    return is_planar
 
 if __name__ == "__main__":
     result = check_planarity()
