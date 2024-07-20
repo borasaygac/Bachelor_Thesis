@@ -71,7 +71,9 @@ int main (int argc, char *argv[]) {
 
     // Check if the formula is co-nested
 
-    callPythonScript();
+    copyCNF();
+    
+    callPythonScript(coNestedCNF);
 
     // Check if the formula is conested
 
@@ -117,7 +119,7 @@ int main (int argc, char *argv[]) {
         
     } else if (conested) {
         // conested alg
-        //callPythonScript();
+
     } else if (nonInterlaced){
         //nonInterlacedSolver();
     } else {
