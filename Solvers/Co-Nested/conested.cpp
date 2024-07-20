@@ -12,7 +12,6 @@ void copyCNF() {
 
 void callPythonScript(const vector<vector<int>>& coNestedCNF) {
     // Initialize the Python interpreter
-    std::cout << std::filesystem::current_path() << std::endl;
     Py_Initialize();
 
     // Define the Python script to be executed
@@ -56,9 +55,13 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
                 // Convert the Python lis of list back to C++ vector of vectors
                 printf("Result: \n");
                 vector<vector<int>> result;
-                printf("pyobj Size: %i\n", PyList_Size(pValue));
                 if (PyList_Check(pValue)) {
-                    for (Py_ssize_t i = 0; i < PyList_Size(pValue); ++i) {
+
+                    if (pValue == Py_False) { // check if a bool is returned
+                        std::cout << "The formula is not co-nested." << std::endl;
+                        return;
+                    } else { // if a list of lists is returned
+                        for (Py_ssize_t i = 0; i < PyList_Size(pValue); ++i) {
                         PyObject* pSubList = PyList_GetItem(pValue, i);
                         if (PyList_Check(pSubList)) {
                             vector<int> subVector;
@@ -68,6 +71,8 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
                             result.push_back(subVector);
                         }
                     }
+                    }
+                    
                 }
 
 
