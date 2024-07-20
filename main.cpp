@@ -62,7 +62,6 @@ int main (int argc, char *argv[]) {
     // Check if the formula is 2-SAT
 
     twosat = isTwoSat(numOfClauses, clauses);
-    printf("Is 2-SAT: %i\n", twosat);
 
     // Check if the formula is nested
 
@@ -70,24 +69,15 @@ int main (int argc, char *argv[]) {
 
     nested = isNested();
 
-    //doesClauseOneStraddleClauseTwo(cnf[1], cnf[2]);
+    // Check if the formula is co-nested
 
-    //doesClauseTwoStraddleClauseOne(cnf[1], cnf[2]);
-    
+    callPythonScript();
 
     // Check if the formula is conested
 
-    // Check if the formula is non-interlaced
+    /* Check if the formula is non-interlaced
     //createDeltaF(); // create deltaF vector
-
-    //print deltaF
-    /* printf("DeltaF: ");
-    for (pair<int,int> p : deltaF) {
-        printf("(%i, %i), ", p.first, p.second);
-    }
-    printf("\n"); */
-
-    //isFNonInterlaced(); // check if the formula is non-interlaced
+    //isFNonInterlaced(); // check if the formula is non-interlaced */
 
     // The big if-else block to determine which algorithm to use
     if (horn) {
