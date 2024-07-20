@@ -1,6 +1,7 @@
 #include <iostream>
 #include "../../globals.hpp"
 #include <Python.h>
+#include <filesystem>
 
 
 vector<vector<int>> coNestedCNF;
@@ -11,6 +12,7 @@ void copyCNF() {
 
 void callPythonScript() {
     // Initialize the Python interpreter
+    std::cout << std::filesystem::current_path() << std::endl;
     Py_Initialize();
 
     // Define the Python script to be executed
@@ -20,6 +22,7 @@ void callPythonScript() {
     // Add the current directory to the Python path
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\".\")");
+    PyRun_SimpleString("sys.path.append(\"Solvers/Co-Nested\")");
 
     // Import the Python module
     PyObject* pName = PyUnicode_DecodeFSDefault(scriptName);
