@@ -3,7 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C:/Users/boras/AppData/Local/Programs/Python/Python312/include"
             ],
             "defines": [
                 "_DEBUG",

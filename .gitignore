@@ -1,3 +1,4 @@
 main.exe
 nested.txt
 .gitignore
+.vscode/*.json
