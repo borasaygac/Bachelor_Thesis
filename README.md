@@ -1,4 +1,7 @@
 # Thesis
+TODOS:
+- Co-Nested Alg finish
+- Seperate the graph drawing for co-nested until after the SAT result. Requires essentially rebuilding the code.
 
 Order of checking 
 1. Horn --implemented

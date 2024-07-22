@@ -67,6 +67,10 @@ extern vector<vector<int>> coNestedCNF;
 
 bool callPythonScript(vector<vector<int>>& coNestedCNF);
 
+void conestedAlgorithm();
+
+extern vector<vector<int>> coNestedVariableOccs;
+
 // Non Interlaced SAT Global Variables
 
 extern vector<pair<int,int>> deltaF;
