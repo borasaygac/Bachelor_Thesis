@@ -74,6 +74,30 @@ bool coNestedPrecedesCompare(int a, int b) {
     return false;
 }
 
+bool isDirectPredecessorInLess(int a, int b) {
+    if (coNestedLessThanCompare(a, b)) {
+        for (int z = 1; z <= numOfVars; z++) {
+            if (z != a && z != b && coNestedLessThanCompare(a, z) && coNestedLessThanCompare(z, b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+bool isDirectPredecessorInPred(int a, int b) {
+    if (coNestedPrecedesCompare(a, b)) {
+        for (int z = 1; z <= numOfVars; z++) {
+            if (z != a && z != b && coNestedPrecedesCompare(a, z) && coNestedPrecedesCompare(z, b)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 
 void conestedAlgorithm() {
 
@@ -88,7 +112,9 @@ void conestedAlgorithm() {
 
     printf("precedes(1,2): %i", coNestedPrecedesCompare(1,2) );
     
-
+    // Test cases for direct predecessor checks
+    printf("Is x1 a direct predecessor of x2 in < : %i\n", isDirectPredecessorInLess(1, 2));
+    printf("Is x1 a direct predecessor of x4 in pred : %i\n", isDirectPredecessorInPred(1, 4));
 
 
 }
