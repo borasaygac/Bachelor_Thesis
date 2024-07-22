@@ -132,8 +132,7 @@ int main (int argc, char *argv[]) {
     } else if (conested) {
         // conested alg
 
-    } else if (nonInterlaced){
-        //nonInterlacedSolver();
+
     } else {
         // Does not fit any of the above
 
@@ -167,7 +166,7 @@ int main (int argc, char *argv[]) {
 
     printf("\nCPU time used: %.6f seconds\n\n", duration.count());
 
-    cout.flush();
+    std::cout.flush();
 
     printf("-------------------------------------\n\n");
 

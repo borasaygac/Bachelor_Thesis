@@ -55,6 +55,7 @@ public:
 
     set<int>& getPositiveOccurrances() {return occursPosInClauses;};
     set<int>& getNegativeOccurrances() {return occursNegInClauses;};
+    int getTotalOccurances() {return tot_occ;};
 
     void setDynamicPositiveOccurrances(set<int> dynPos) {dynamicOccursPosInClauses = dynPos;};
     void setDynamicNegativeOccurrances(set<int> dynNeg) {dynamicOccursNegInClauses = dynNeg;};
