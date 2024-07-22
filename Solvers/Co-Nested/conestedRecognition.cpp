@@ -53,7 +53,6 @@ bool callPythonScript(vector<vector<int>>& coNestedCNF) {
 
             if (pValue != nullptr) {
                 // Convert the Python lis of list back to C++ vector of vectors
-                printf("Result: \n");
                 vector<vector<int>> result;
                 if (PyList_Check(pValue)) {
 
@@ -72,15 +71,6 @@ bool callPythonScript(vector<vector<int>>& coNestedCNF) {
                             }
                         }
                     }
-                }
-
-
-                // Print the result
-                for (const auto& vec: result){
-                    for (const auto& elem: vec){
-                        std::cout << elem << " ";
-                    }
-                    std::cout << std::endl;
                 }
 
                 coNestedCNF = result;
