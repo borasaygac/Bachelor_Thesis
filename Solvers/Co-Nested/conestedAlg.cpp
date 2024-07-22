@@ -16,6 +16,29 @@ bool coNestedLessThanCompare(int a, int b) {
     return false;
 }
 
+void generateLessThanResults() {
+    for (int i = 1; i <= numOfVars; i++) {
+        for (int j = 1; j <= numOfVars; j++) {
+            if (i != j) {
+                bool result = coNestedLessThanCompare(i,j);
+                coNestedLessThanResArr.push_back({{i,j},result});
+            }
+            
+        }
+    }
+}
+
+bool findPairAndGetValue(int a, int b) {
+    for (const auto& item : coNestedLessThanResArr) {
+        if (item.first.first == a && item.first.second == b) {
+            return item.second; // Return the associated bool value
+        }
+    }
+    // Optionally, handle the case where the pair is not found
+    // For example, return false or throw an exception
+    return false; // Example default behavior
+}
+
 void fillVarOccsArray() {
     coNestedVariableOccs.resize(numOfVars + 1);
 
@@ -43,17 +66,14 @@ void fillDegreesforVars() {
     }
 }
 
-void generateLessThanResults() {
-    for (int i = 1; i <= numOfVars; i++) {
-        for (int j = 1; j <= numOfVars; j++) {
-            if (i != j) {
-                bool result = coNestedLessThanCompare(i,j);
-                coNestedLessThanResArr.push_back({{i,j},result});
-            }
-            
-        }
+bool coNestedPrecedesCompare(int a, int b) {
+    if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) & 
+        (coNestedVariableOccs[b][varDegrees[b]-1] <= coNestedVariableOccs[a][varDegrees[a]-1])) {
+            return true;
     }
+    return false;
 }
+
 
 void conestedAlgorithm() {
 
@@ -65,6 +85,8 @@ void conestedAlgorithm() {
     //int M = 0; // M denotes the number of simultaneously satisfiable clauses
     
     generateLessThanResults();
+
+    printf("precedes(1,2): %i", coNestedPrecedesCompare(1,2) );
     
 
 
