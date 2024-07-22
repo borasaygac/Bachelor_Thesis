@@ -87,7 +87,6 @@ bool callPythonScript(vector<vector<int>>& coNestedCNF) {
 
                 Py_DECREF(pValue);
 
-                return true;
             } else {
                 PyErr_Print();
                 std::cerr << "Failed to call the Python function." << std::endl;
@@ -105,6 +104,7 @@ bool callPythonScript(vector<vector<int>>& coNestedCNF) {
         std::cerr << "Failed to load the Python script." << std::endl;
     }
 
+    return true;
 }
 
 

@@ -90,15 +90,15 @@ def construct_graph_from_cnf(cnf):
 
 def check_planarity_for_all_permutations(cnf):
     
-    for r in range(1, len(cnf) + 1):
-        for permutation in itertools.permutations(cnf):
+    
+    for permutation in itertools.permutations(cnf):
             
-            # Construct the graph
-            is_planar = construct_graph_from_cnf(permutation)
+        # Construct the graph
+        is_planar = construct_graph_from_cnf(permutation)
 
-            if is_planar:
-                print("The formula is co-nested because there is an outerplanar permutation.")
-                return list(permutation)
+        if is_planar:
+            print("The formula is co-nested because there is an outerplanar permutation.")
+            return list(permutation)
     
     print("The formula is not co-nested because there are no outerplanar permutations.")
     return False
