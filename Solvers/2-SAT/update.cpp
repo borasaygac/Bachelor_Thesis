@@ -12,7 +12,7 @@ void update(int assertedVar) {
     // clauses where assertedVar evaluates to TRUE
     std::set<int>* clausesToMarkSatisfied;
 
-    // In DPDL - analogous to UP - if the var is true than the negative occurrances need to be updated as they will evaluate to false
+    // In DPLL - analogous to UP - if the var is true than the negative occurrances need to be updated as they will evaluate to false
     // vice versa otherwise
 
     clausesToUpdate = (vars[assertedVar].getValue() == TRUE) ? &vars[assertedVar].getNegativeOccurrances(): 

@@ -27,7 +27,7 @@ bool isTwoSat(int numOfClauses, vector<Clause> clauses) {
 }
 
 // Solves the 2-SAT formula -- main function 
-void* twoSatDPDL(void* arg) {
+void* DPLL(void* arg) {
     while (true) {
         propagate();
         chooseINC();
