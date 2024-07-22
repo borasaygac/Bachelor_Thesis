@@ -6,7 +6,7 @@
 #include "../../globals.hpp"
 
 
-vector<vector<int>> orderedCNF;
+vector<vector<int>> nestedCNF;
 
 vector<int> lits;
 
@@ -38,7 +38,7 @@ vector<int> nestedClausePreOrder(vector<int> &clause) {
 }
 
 void printorderedCNF() {
-    for (auto clause: orderedCNF) {
+    for (auto clause: nestedCNF) {
         for (auto elem: clause) {
             printf("%i ", elem);
         }
@@ -48,22 +48,22 @@ void printorderedCNF() {
 
 void createOrderedCNF() {
     for (auto clause: cnf) {
-        orderedCNF.push_back(nestedClausePreOrder(clause));
+        nestedCNF.push_back(nestedClausePreOrder(clause));
     }
     //printorderedCNF();
 }
 
 bool isNested() {
-    for (int i = 1; i < orderedCNF.size(); i++) {
-        for (int j = i + 1; j < orderedCNF.size(); j++) {
-            if (doesClauseOneStraddleClauseTwo(orderedCNF[i], orderedCNF[j]) && doesClauseTwoStraddleClauseOne(orderedCNF[i], orderedCNF[j])) {
+    for (int i = 1; i < nestedCNF.size(); i++) {
+        for (int j = i + 1; j < nestedCNF.size(); j++) {
+            if (doesClauseOneStraddleClauseTwo(nestedCNF[i], nestedCNF[j]) && doesClauseTwoStraddleClauseOne(nestedCNF[i], nestedCNF[j])) {
                 printf("The formula is not nested because clause %i and clause %i overlap \n", i, j);
-                for (int k = 0; k < orderedCNF[i].size(); k++) {
-                    printf("%i ", orderedCNF[i][k]);
+                for (int k = 0; k < nestedCNF[i].size(); k++) {
+                    printf("%i ", nestedCNF[i][k]);
                 }
                 printf("\n");
-                for (int k = 0; k < orderedCNF[j].size(); k++) {
-                    printf("%i ", orderedCNF[j][k]);
+                for (int k = 0; k < nestedCNF[j].size(); k++) {
+                    printf("%i ", nestedCNF[j][k]);
                 }
                 return false;
             }
@@ -118,11 +118,11 @@ bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseT
 
 void fillLiteralsAndStart() {
     int startcounter = 0;
-    for (int i = 0; i < orderedCNF.size(); i++) {
+    for (int i = 0; i < nestedCNF.size(); i++) {
         start.push_back(startcounter);
-        startcounter += orderedCNF[i].size();
-        for (int j = 0; j < orderedCNF[i].size(); j++) {
-            lits.push_back(orderedCNF[i][j]);
+        startcounter += nestedCNF[i].size();
+        for (int j = 0; j < nestedCNF[i].size(); j++) {
+            lits.push_back(nestedCNF[i][j]);
         }
     }
     // add the extra dummy clause

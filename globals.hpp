@@ -35,11 +35,11 @@ int hornSolver();
 
 bool isTwoSat(int numOfClauses, vector<Clause> clauses);
 
-void* twoSatDPDL(void* arg);
+void* DPLL(void* arg);
 
 // Nested SAT Global Variables
 
-extern vector<vector<int>> orderedCNF;
+extern vector<vector<int>> nestedCNF;
 
 extern vector<int> lits;
 

@@ -25,7 +25,7 @@ bool conested = false;
 bool nonInterlaced = false;
 
 
-// for 2 SAT and DPDL
+// for 2 SAT and DPLL
 int numOfSatClauses = 0;
 bool backtrackFlag = false;
 int dc = 0;
@@ -102,7 +102,7 @@ int main (int argc, char *argv[]) {
         // DPLL two sat
         pthread_t thread;
 
-        if (pthread_create(&thread, NULL, twoSatDPDL,NULL)) {
+        if (pthread_create(&thread, NULL, DPLL,NULL)) {
         std::cerr << "Error: Unable to create thread."
                   << "\n";
         std::cout.flush();
@@ -116,6 +116,18 @@ int main (int argc, char *argv[]) {
         fillLiteralsAndStart();
 
         nestedSolver();
+
+        pthread_t thread;
+
+        if (pthread_create(&thread, NULL, DPLL,NULL)) {
+        std::cerr << "Error: Unable to create thread."
+                  << "\n";
+        std::cout.flush();
+        return -1;
+        }
+
+        pthread_join(thread, NULL);
+
         
     } else if (conested) {
         // conested alg
