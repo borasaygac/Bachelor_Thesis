@@ -65,7 +65,7 @@ void copyCNF();
 
 extern vector<vector<int>> coNestedCNF;
 
-void callPythonScript(const vector<vector<int>>& coNestedCNF);
+bool callPythonScript(vector<vector<int>>& coNestedCNF);
 
 // Non Interlaced SAT Global Variables
 

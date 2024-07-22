@@ -10,7 +10,7 @@ void copyCNF() {
     coNestedCNF = cnf;
 }
 
-void callPythonScript(const vector<vector<int>>& coNestedCNF) {
+bool callPythonScript(vector<vector<int>>& coNestedCNF) {
     // Initialize the Python interpreter
     Py_Initialize();
 
@@ -59,20 +59,19 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
 
                     if (pValue == Py_False) { // check if a bool is returned
                         std::cout << "The formula is not co-nested." << std::endl;
-                        return;
+                        return false;
                     } else { // if a list of lists is returned
                         for (Py_ssize_t i = 0; i < PyList_Size(pValue); ++i) {
-                        PyObject* pSubList = PyList_GetItem(pValue, i);
-                        if (PyList_Check(pSubList)) {
-                            vector<int> subVector;
-                            for (Py_ssize_t j = 0; j < PyList_Size(pSubList); ++j) {
-                                subVector.push_back(PyLong_AsLong(PyList_GetItem(pSubList, j)));
+                            PyObject* pSubList = PyList_GetItem(pValue, i);
+                            if (PyList_Check(pSubList)) {
+                                vector<int> subVector;
+                                for (Py_ssize_t j = 0; j < PyList_Size(pSubList); ++j) {
+                                    subVector.push_back(PyLong_AsLong(PyList_GetItem(pSubList, j)));
+                                }
+                                result.push_back(subVector);
                             }
-                            result.push_back(subVector);
                         }
                     }
-                    }
-                    
                 }
 
 
@@ -84,7 +83,11 @@ void callPythonScript(const vector<vector<int>>& coNestedCNF) {
                     std::cout << std::endl;
                 }
 
+                coNestedCNF = result;
+
                 Py_DECREF(pValue);
+
+                return true;
             } else {
                 PyErr_Print();
                 std::cerr << "Failed to call the Python function." << std::endl;

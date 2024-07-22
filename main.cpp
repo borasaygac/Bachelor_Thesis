@@ -73,7 +73,7 @@ int main (int argc, char *argv[]) {
 
     copyCNF();
     
-    callPythonScript(coNestedCNF);
+    conested = callPythonScript(coNestedCNF);
 
     // Check if the formula is conested
 
@@ -82,10 +82,10 @@ int main (int argc, char *argv[]) {
     //isFNonInterlaced(); // check if the formula is non-interlaced */
 
     // The big if-else block to determine which algorithm to use
-    horn = false;
+    /* horn = false;
     twosat = false;
     nested = false;
-    conested = true;
+    conested = true; */
     if (horn) {
         if (unitClauses.empty()){
             printf("No unit clauses!\n");
