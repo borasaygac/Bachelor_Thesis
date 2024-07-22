@@ -1,13 +1,19 @@
 #include "../../globals.hpp"
 #include <algorithm>
 #include <unordered_map>
+#include <utility>
 
-vector<vector<bool>> coNestedLessThan(numOfVars + 1, vector<bool>(numOfVars + 1, false));
+vector<pair<pair<int,int>, bool>> coNestedLessThanResArr;
 
 vector<vector<int>> coNestedVariableOccs;
 
+vector<int> varDegrees;
+
 bool coNestedLessThanCompare(int a, int b) {
-    
+    if (coNestedVariableOccs[a][coNestedVariableOccs[a].size()-1] <= coNestedVariableOccs[b][0]){
+        return true;
+    } 
+    return false;
 }
 
 void fillVarOccsArray() {
@@ -28,8 +34,24 @@ void fillVarOccsArray() {
         // Assign to the main vector
         coNestedVariableOccs[i].resize(mergedOccs.size());
         coNestedVariableOccs[i] = mergedOccs;
+    }
+}
 
-        
+void fillDegreesforVars() {
+    for (int i = 1; i <= numOfVars; i++) {
+        varDegrees[i] = vars[i].getTotalOccurances();
+    }
+}
+
+void generateLessThanResults() {
+    for (int i = 1; i <= numOfVars; i++) {
+        for (int j = 1; j <= numOfVars; j++) {
+            if (i != j) {
+                bool result = coNestedLessThanCompare(i,j);
+                coNestedLessThanResArr.push_back({{i,j},result});
+            }
+            
+        }
     }
 }
 
@@ -37,12 +59,13 @@ void conestedAlgorithm() {
 
     fillVarOccsArray();
     
-    int M = 0; // M denotes the number of simultaneously satisfiable clauses
-    vector<int> varDegrees(numOfVars + 1, 0);
+    varDegrees.resize(numOfVars + 1);
+    fillDegreesforVars();
 
-    for (int i = 1; i <= numOfVars; i++) {
-        varDegrees[i] = vars[i].getTotalOccurances();
-    }
+    //int M = 0; // M denotes the number of simultaneously satisfiable clauses
+    
+    generateLessThanResults();
+    
 
 
 

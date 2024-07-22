@@ -2,3 +2,4 @@ main.exe
 nested.txt
 .gitignore
 .vscode/*.json
+Solvers/Co-Nested/__pycache__/planarity_check.cpython-312.pyc
