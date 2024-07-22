@@ -3,7 +3,7 @@
 void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
 
     if (!horn) {
-        printf("The formula is not Horn becasuse clause(s): ");
+        printf("Horn Recognition: N\nReason: clause(s): ");
         int hornCounter = 0;
         for (int i = 1; i < numOfClauses + 1; i++){
 
@@ -18,9 +18,9 @@ void const printHornClauses(bool horn) {   // Print the Horn clauses for debuggi
             printf("are not Horn.\n");
         }
     } else {
-        printf("The formula is Horn because all clauses are Horn.\n");
+        printf("Horn Recognition: Y\nReason: all clauses are Horn.\n");
     }
-    printf("\n\n");
+    printf("\n");
 }
 
 

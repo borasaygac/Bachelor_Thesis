@@ -57,19 +57,22 @@ bool isNested() {
     for (int i = 1; i < nestedCNF.size(); i++) {
         for (int j = i + 1; j < nestedCNF.size(); j++) {
             if (doesClauseOneStraddleClauseTwo(nestedCNF[i], nestedCNF[j]) && doesClauseTwoStraddleClauseOne(nestedCNF[i], nestedCNF[j])) {
-                printf("The formula is not nested because clause %i and clause %i overlap \n", i, j);
+                printf("Nested Recognition: N \nThe formula is not nested because clause %i and clause %i overlap \n", i, j);
+                printf("Clause %i: [", i);
                 for (int k = 0; k < nestedCNF[i].size(); k++) {
                     printf("%i ", nestedCNF[i][k]);
                 }
-                printf("\n");
+                printf("]\n");
+                printf("Clause %i: [", j);
                 for (int k = 0; k < nestedCNF[j].size(); k++) {
                     printf("%i ", nestedCNF[j][k]);
                 }
+                printf("]\n\n");
                 return false;
             }
         }
     }
-    printf("The formula is nested\n\n");
+    printf("Nested Recognition: Y\nReason: No two clauses overlap.\n\n");
     return true;
 }
 
@@ -128,19 +131,9 @@ void fillLiteralsAndStart() {
     // add the extra dummy clause
     start.push_back(startcounter);
     //lits.push_back(0);
-
-    for (auto elem: lits) {
-        printf("%i ", elem);
-    }
-    printf("\n");
-
-    for(auto elem: start) {
-        printf("%i ", elem);
-    }
-    printf("\n");
 }
-// refactored nested solver
 
+// refactored nested solver
 void modifyNewSatTable(int x) {
     int tmp[2][2];
                 for (int s = 0; s < 2; s++) { //init tmp
@@ -227,9 +220,9 @@ void nestedSolver() {
     }
 
     if (satTable[0][1][1] == 1) {
-        printf("The formula is satisfiable\n");
+        printf("Nested Algorithm: The formula is satisfiable\n");
     } else {
-        printf("The formula is not satisfiable\n");
+        printf("Nested Algorithm: The formula is not satisfiable\n");
     }
 }
 

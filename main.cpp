@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
 
     string fileName = argv[1];
     try {
-        printf("Parsing file: %s\n", fileName.c_str());
+        printf("Parsing file: %s\n\n", fileName.c_str());
         parseDIMACS(fileName);
     } catch (const std::runtime_error& e) {
         cerr << "Error: " << e.what() << '\n';

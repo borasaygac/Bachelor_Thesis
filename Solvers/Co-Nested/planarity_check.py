@@ -97,8 +97,8 @@ def check_planarity_for_all_permutations(cnf):
         is_planar = construct_graph_from_cnf(permutation)
 
         if is_planar:
-            print("The formula is co-nested because there is an outerplanar permutation.")
+            print("Co-Nested Recognition: Y\nReason: There exists an outerplanar permutation.")
             return list(permutation)
     
-    print("The formula is not co-nested because there are no outerplanar permutations.")
+    print("Co-Nested Recognition: N\nReason: There exists no outerplanar permutation.")
     return False
