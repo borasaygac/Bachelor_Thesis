@@ -9,6 +9,8 @@ vector<vector<int>> coNestedVariableOccs;
 
 vector<int> varDegrees;
 
+unordered_map<int, set<int>> triangleSets;
+
 bool coNestedLessThanCompare(int a, int b) {
     if (coNestedVariableOccs[a][coNestedVariableOccs[a].size()-1] <= coNestedVariableOccs[b][0]){
         return true;
@@ -153,6 +155,26 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
     return true;
 }
 
+void defineTriangleSets() {
+    for (int i = 1; i <= numOfVars; i++) {
+        int varDegree = varDegrees[i];
+        for (int j = 0; j < varDegree - 1; j++) {
+            int startClause = coNestedVariableOccs[i][j];
+            int endClause = coNestedVariableOccs[i][j+1];
+            set<int> triangleSet;
+
+            for (int clauseIDx = startClause; clauseIDx <= endClause; clauseIDx++) {
+                for (int lit : coNestedCNF[clauseIDx]) {
+                    int absLit = abs(lit);
+                    triangleSet.insert(absLit);
+                }
+            }
+
+            triangleSets[i * 100 + j] = triangleSet; 
+        }
+    }
+}
+
 void conestedAlgorithm() {
 
     fillVarOccsArray();
@@ -227,5 +249,16 @@ void conestedAlgorithm() {
         }
         printf("\n");
     }
+
+    //defineTriangleSets();
+
+    /*printf("Triangle sets: \n");
+    for (const auto& item : triangleSets) {
+        printf("Triangle set for %i: ", item.first);
+        for (int x : item.second) {
+            printf("%i ", x);
+        }
+        printf("\n");
+    }*/
 
 }
