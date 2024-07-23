@@ -205,6 +205,25 @@ int findXMax (const vector<vector<int>>& X) {
     return xMax;
 }
 
+// Recursive function to compute f^\epsilon(x, alpha, beta)_{1, degree(x)}
+int computeF1DegreeX(int x, bool epsilon, bool alpha, bool beta, int start, int end){
+    if (start == end - 1) {
+        return computeFiiPlus1(x, epsilon, alpha, beta, start);
+    }
+
+    int maxValue = INT_MIN;
+    for (bool alphaPrime : {true, false}){
+        for (bool betaPrime : {true, false}){
+            int current = computeF1DegreeX(x, epsilon, alpha, beta,start, end - 1) +
+                          computeFiiPlus1(x, epsilon, betaPrime, beta, end -1) - 
+                          (alphaPrime && betaPrime ? 1 : 0);
+            maxValue = max(maxValue, current);
+        }
+    }
+    return maxValue;
+}
+
+// Function to compute f(x, alpha, beta)
 int f(int x, bool alpha, bool beta) {
     int maxValue = INT_MIN;
     for (bool epsilon: {true,false}) {
