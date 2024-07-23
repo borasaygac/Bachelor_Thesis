@@ -188,5 +188,44 @@ void conestedAlgorithm() {
         printf("\n");
     }
 
+    // Example: Check the relation for some pairs
+    printf("Relation results: \n");
+    for (size_t i = 0; i < numOfVars; ++i) {
+        for (size_t j = 0; j < numOfVars; ++j) {
+            if (i != j) {
+                printf("%i lesswithcurlylinebelow %i: %i\n",i+1,j+1, coNestedLessThanWithCurlyLineBelow(i+1, j+1, X));
+            }
+        }
+    }
+
+    int x_min = 0;
+    int x_minDegree = 0; 
+    for (size_t i = 0; i < coNestedCNF[1].size(); i++){
+        if (varDegrees[coNestedCNF[1][i]] > x_minDegree) {
+            x_min = coNestedCNF[1][i];
+            x_minDegree = varDegrees[coNestedCNF[1][i]];
+        }
+    }
+    printf("x_min: %i\n", x_min);
+    printf("x_minDegree: %i\n", x_minDegree);
+
+    int x_max = 0;
+    int x_maxDegree = 0;
+    for (size_t i = 0; i < coNestedCNF[coNestedCNF.size()-1].size(); i++){
+        if (varDegrees[coNestedCNF[coNestedCNF.size()-1][i]] > x_maxDegree) {
+            x_max = coNestedCNF[coNestedCNF.size()-1][i];
+            x_maxDegree = varDegrees[coNestedCNF[coNestedCNF.size()-1][i]];
+        }
+    }
+    printf("x_max: %i\n", x_max);
+    printf("x_maxDegree: %i\n", x_maxDegree);
+
+    printf("conested cnf: \n");
+    for (size_t i = 0; i < coNestedCNF.size(); i++) {
+        for (size_t j = 0; j < coNestedCNF[i].size(); j++) {
+            printf("%i ", coNestedCNF[i][j]);
+        }
+        printf("\n");
+    }
 
 }
