@@ -175,6 +175,31 @@ void defineTriangleSets() {
     }
 }
 
+int findXMin (const vector<vector<int>>& X) {
+    int xMin = X[0][0];
+    for (int i : X[0]) {
+        if (varDegrees[xMin] < varDegrees[i] && coNestedVariableOccs[i][0] == 1) {
+            xMin = i;
+        }
+    }
+    return xMin;
+}
+
+int findXMax (const vector<vector<int>>& X) {
+    int xMax = X[0][0];
+    int lowestOcc = coNestedVariableOccs[xMax][0];
+    int highestOcc = coNestedVariableOccs[xMax][varDegrees[xMax]-1];
+    for (int i : X[0]) {
+        if (coNestedVariableOccs[xMax][varDegrees[xMax]] < coNestedVariableOccs[i][varDegrees[i]] &&
+            coNestedVariableOccs[i][0] < lowestOcc) {
+            xMax = i;
+            lowestOcc = coNestedVariableOccs[i][0];
+            highestOcc = coNestedVariableOccs[i][varDegrees[i]-1];
+        }
+    }
+    return xMax;
+}
+
 void conestedAlgorithm() {
 
     fillVarOccsArray();
@@ -182,7 +207,7 @@ void conestedAlgorithm() {
     varDegrees.resize(numOfVars + 1);
     fillDegreesforVars();
 
-    //int M = 0; // M denotes the number of simultaneously satisfiable clauses
+    int M = 0; // M denotes the number of simultaneously satisfiable clauses
     
     generateLessThanResults();
 
@@ -191,7 +216,7 @@ void conestedAlgorithm() {
         variables.insert(i);
     }
 
-    vector<vector<int>> X;
+    vector<vector<int>> X; // X^0, X^1, ..., X^k
     
     while (!variables.empty()) {
         vector<int> Xk = findPrecMaximalElements(variables);
@@ -211,41 +236,18 @@ void conestedAlgorithm() {
     }
 
     // Example: Check the relation for some pairs
-    printf("Relation results: \n");
-    for (size_t i = 0; i < numOfVars; ++i) {
-        for (size_t j = 0; j < numOfVars; ++j) {
-            if (i != j) {
-                printf("%i lesswithcurlylinebelow %i: %i\n",i+1,j+1, coNestedLessThanWithCurlyLineBelow(i+1, j+1, X));
-            }
-        }
-    }
 
-    int x_min = 0;
-    int x_minDegree = 0; 
-    for (size_t i = 0; i < coNestedCNF[1].size(); i++){
-        if (varDegrees[coNestedCNF[1][i]] > x_minDegree) {
-            x_min = coNestedCNF[1][i];
-            x_minDegree = varDegrees[coNestedCNF[1][i]];
-        }
-    }
-    printf("x_min: %i\n", x_min);
-    printf("x_minDegree: %i\n", x_minDegree);
-
-    int x_max = 0;
-    int x_maxDegree = 0;
-    for (size_t i = 0; i < coNestedCNF[coNestedCNF.size()-1].size(); i++){
-        if (varDegrees[coNestedCNF[coNestedCNF.size()-1][i]] > x_maxDegree) {
-            x_max = coNestedCNF[coNestedCNF.size()-1][i];
-            x_maxDegree = varDegrees[coNestedCNF[coNestedCNF.size()-1][i]];
-        }
-    }
+    int x_min = findXMin(X);
+    int x_max = findXMax(X);
+    
     printf("x_max: %i\n", x_max);
-    printf("x_maxDegree: %i\n", x_maxDegree);
-
+    printf("x_min: %i\n", x_min);
+    
     printf("conested cnf: \n");
-    for (size_t i = 0; i < coNestedCNF.size(); i++) {
-        for (size_t j = 0; j < coNestedCNF[i].size(); j++) {
-            printf("%i ", coNestedCNF[i][j]);
+    for (size_t i = 0; i < coNestedCNF.size(); ++i) {
+        printf("Clause %i: ", i);
+        for (int x : coNestedCNF[i]) {
+            printf("%i ", x);
         }
         printf("\n");
     }
@@ -260,5 +262,8 @@ void conestedAlgorithm() {
         }
         printf("\n");
     }*/
-
+    /*M = max(g(x_min, x_max,true,true),
+           g(x_min, x_max,true,false),
+           g(x_min, x_max,false,true),
+           g(x_min, x_max,false,false));*/
 }
