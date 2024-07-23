@@ -11,6 +11,9 @@ vector<int> varDegrees;
 
 unordered_map<int, set<int>> triangleSets;
 
+unordered_map<tuple<int,int,bool,bool>, int> memoG;
+unordered_map<tuple<int,bool,bool>, int> memoF;
+
 bool coNestedLessThanCompare(int a, int b) {
     if (coNestedVariableOccs[a][coNestedVariableOccs[a].size()-1] <= coNestedVariableOccs[b][0]){
         return true;
@@ -161,6 +164,8 @@ void defineTriangleSets() {
         for (int j = 0; j < varDegree - 1; j++) {
             int startClause = coNestedVariableOccs[i][j];
             int endClause = coNestedVariableOccs[i][j+1];
+            printf("for variable %i with j %i, startClause: %i, endClause: %i\n", i, j, startClause, endClause);
+            printf("startClause: %i, endClause: %i\n", startClause, endClause);
             set<int> triangleSet;
 
             for (int clauseIDx = startClause; clauseIDx <= endClause; clauseIDx++) {
@@ -198,6 +203,43 @@ int findXMax (const vector<vector<int>>& X) {
         }
     }
     return xMax;
+}
+
+int g(int x, int y, bool alpha, bool beta) {
+    if (x == y) {
+        return f(x, alpha, beta);
+    }
+
+    auto memoKey = make_tuple(x,y,alpha,beta);
+    if (memoG.find(memoKey) != memoG.end()) {
+        return memoG[memoKey];
+    }
+
+    int result = -1; // Placeholder for max value
+
+    for (bool alphaPrime : {true,false}) {
+        for(bool betaPrime : {true, false}) {
+            int current = f(x,alpha,betaPrime);
+
+            // Find direct successor x' of x in lesswithcurlylinebelow relation
+            for (int xPrime = 1; xPrime <= numOfVars; ++xPrime){
+                if (x == xPrime || isDirectPredecessorInPred(x, xPrime)) {
+                    continue;
+                }
+                if (coNestedVariableOccs[x].back() == coNestedVariableOccs[xPrime][0]){
+                    // Case 1:  x(degree(x)) == x'(1)
+                    current += g(xPrime,y,alphaPrime,beta);
+                } else if (coNestedVariableOccs[x].back() < coNestedVariableOccs[xPrime][0]) {
+                    // Case 2: x(degree(x)) < x'(1)
+                    current += g(xPrime,y,alphaPrime,beta);
+                }
+            }
+            result = max(result,current);
+        }
+    }
+
+    memoG[memoKey] = result;
+    return result;
 }
 
 void conestedAlgorithm() {
@@ -252,16 +294,16 @@ void conestedAlgorithm() {
         printf("\n");
     }
 
-    //defineTriangleSets();
+    defineTriangleSets();
 
-    /*printf("Triangle sets: \n");
+    printf("Triangle sets: \n");
     for (const auto& item : triangleSets) {
         printf("Triangle set for %i: ", item.first);
         for (int x : item.second) {
             printf("%i ", x);
         }
         printf("\n");
-    }*/
+    }
     /*M = max(g(x_min, x_max,true,true),
            g(x_min, x_max,true,false),
            g(x_min, x_max,false,true),
