@@ -116,6 +116,43 @@ vector<int> findPrecMaximalElements(set<int> &variables) {
 }
 
 
+bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>& levels) {
+    int xlevel = -1; int ylevel = -1;
+    for (size_t k = 0; k < levels.size(); ++k) {
+        if (find(levels[k].begin(), levels[k].end(), x) != levels[k].end()) {
+            xlevel = k;
+        }
+        if (find(levels[k].begin(), levels[k].end(), y) != levels[k].end()) {
+            ylevel = k;
+        }
+    }
+
+    if (xlevel != ylevel || xlevel == -1 || ylevel == -1) {
+        return false;
+    }
+
+    if (!coNestedLessThanCompare(x, y)) {
+        return false;
+    }
+
+    if (xlevel == 0) {
+        return true;
+    }
+
+    // check if there is a variable z in level xlevel-1 such that x(degree(x) <= z(i) <= y(1))
+    const vector<int>& sublevel = levels[xlevel-1];
+    for (int z: sublevel){
+        for (int i = 0; i < varDegrees[z]; ++i) {
+            if (coNestedVariableOccs[x][varDegrees[x]-1] <= coNestedVariableOccs[z][i] 
+            && (coNestedVariableOccs[z][i] <= coNestedVariableOccs[y][0])) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 void conestedAlgorithm() {
 
     fillVarOccsArray();
