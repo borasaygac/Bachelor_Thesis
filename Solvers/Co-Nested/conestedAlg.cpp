@@ -93,8 +93,8 @@ void fillDegreesforVars() {
 
 bool coNestedPrecedesCompare(int a, int b) {
     printf("Checking for a: %i, b: %i\: n", a, b);
-    if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) & 
-        (coNestedVariableOccs[b][varDegrees[b]-1] <= coNestedVariableOccs[a][varDegrees[a]-1])) {
+    if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) && 
+        (coNestedVariableOccs[b].back() <= coNestedVariableOccs[a].back())) {
             printf("True\n");
             return true;
     }
@@ -131,9 +131,11 @@ vector<int> findPrecMaximalElements(set<int> &variables) {
     for (int x : variables) {
         bool isPrecMaximal = true;
         for (int y : variables) {
-            if ((x != y) & coNestedPrecedesCompare(x, y)) {
-                isPrecMaximal = false;
-                break;
+            if (x != y){
+                if(coNestedPrecedesCompare(x, y)) {
+                    isPrecMaximal = false;
+                    break;
+                }  
             }
         }
         if (isPrecMaximal) {
@@ -396,6 +398,15 @@ void conestedAlgorithm() {
     }
 
     vector<vector<int>> X; // X^0, X^1, ..., X^k
+
+    printf("conested cnf: \n");
+    for (size_t i = 0; i < coNestedCNF.size(); ++i) {
+        printf("Clause %i: ", i);
+        for (int x : coNestedCNF[i]) {
+            printf("%i ", x);
+        }
+        printf("\n");
+    }
     
     while (!variables.empty()) {
         vector<int> Xk = findPrecMaximalElements(variables);
@@ -403,6 +414,16 @@ void conestedAlgorithm() {
         // Debugging: Print the size of variables and Xk
         printf("Size of variables: %zu\n", variables.size());
         printf("Size of Xk: %zu\n", Xk.size());
+        if (Xk.empty()) {
+            printf("No \\prec-maximal elements found. Possible issue detected.\n");
+            // Handling empty Xk scenario
+            // If no prec-maximal elements are found, then they must be in the same equivalent relation
+            for (int x : variables) {
+                printf("Adding %i to Xk\n", x);
+                Xk.push_back(x);
+            }
+            
+        }
         X.push_back(Xk);
         for (int x : Xk) {
             variables.erase(x);
