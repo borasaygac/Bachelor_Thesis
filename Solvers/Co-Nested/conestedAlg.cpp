@@ -205,6 +205,15 @@ int findXMax (const vector<vector<int>>& X) {
     return xMax;
 }
 
+int f(int x, bool alpha, bool beta) {
+    int maxValue = INT_MIN;
+    for (bool epsilon: {true,false}) {
+        int current = computeF1DegreeX(x, epsilon, alpha, beta, 0, varDegrees[x]);
+        maxValue = max(maxValue, current);
+    }
+    return maxValue;
+}
+
 int g(int x, int y, bool alpha, bool beta) {
     if (x == y) {
         return f(x, alpha, beta);
