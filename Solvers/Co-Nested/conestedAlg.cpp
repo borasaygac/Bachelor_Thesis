@@ -205,6 +205,48 @@ int findXMax (const vector<vector<int>>& X) {
     return xMax;
 }
 
+// Function to compute f^\epsilon(x, alpha, beta)_ii+1
+int computeFiiPlus1(int x, bool epsilon, bool alpha, bool beta, int i) {
+    int thetaEpsilon = computeThetaEpsilon(x, epsilon, alpha, beta, i);
+
+    auto [xMin, xMax] = findMinMaxinTriangle(x,i);
+    if (xMin == INT_MAX || xMax == INT_MIN){
+        return thetaEpsilon;
+    }
+
+    // Four cases 
+    int maxValue = INT_MIN;
+    for (bool alphaPrime : {true, false}) {
+        for (bool alphaDoublePrime : {true, false}) {
+            for (bool betaPrime : {true, false}) {
+                for (bool betaDoublePrime : {true, false}) {
+                int current = thetaEpsilon;
+
+                    if (coNestedVariableOccs[x][i] == coNestedVariableOccs[xMin][0] && 
+                        coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i + 1]) {
+                        current +=  g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (alphaDoublePrime && betaDoublePrime ? 1 : 0);
+                        maxValue = max(maxValue,current);
+                    } else if (coNestedVariableOccs[x][i] < coNestedVariableOccs[xMin][0] && 
+                               coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i + 1]){
+                        current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (betaDoublePrime ? 1 : 0);
+                        maxValue = max(maxValue, current);
+                    } else if (coNestedVariableOccs[x][i] == coNestedVariableOccs[xMin][0] &&
+                               coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i + 1]) {
+                        current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (alphaDoublePrime ? 1 : 0);
+                        maxValue = max(maxValue, current);
+                    }  else if (coNestedVariableOccs[x][i] < coNestedVariableOccs[xMin][0] && 
+                                coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i + 1]) {
+                        current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime);
+                        maxValue = max(maxValue, current);
+                    }
+                }
+            }
+        }
+    }
+    return maxValue;
+}
+
+
 // Recursive function to compute f^\epsilon(x, alpha, beta)_{1, degree(x)}
 int computeF1DegreeX(int x, bool epsilon, bool alpha, bool beta, int start, int end){
     if (start == end - 1) {
