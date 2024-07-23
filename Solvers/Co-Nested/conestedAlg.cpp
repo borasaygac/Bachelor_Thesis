@@ -2,6 +2,8 @@
 #include <algorithm>
 #include <unordered_map>
 #include <utility>
+#include <tuple>
+
 
 vector<pair<pair<int,int>, bool>> coNestedLessThanResArr;
 
@@ -10,6 +12,29 @@ vector<vector<int>> coNestedVariableOccs;
 vector<int> varDegrees;
 
 unordered_map<int, set<int>> triangleSets;
+
+namespace std {
+    template <>
+    struct hash<tuple<int, int, bool, bool>> {
+        size_t operator()(const tuple<int, int, bool, bool>& t) const {
+            auto hash1 = hash<int>{}(get<0>(t));
+            auto hash2 = hash<int>{}(get<1>(t));
+            auto hash3 = hash<bool>{}(get<2>(t));
+            auto hash4 = hash<bool>{}(get<3>(t));
+            return ((hash1 ^ (hash2 << 1)) >> 1) ^ ((hash3 ^ (hash4 << 1)) >> 1);
+        }
+    };
+
+    template <>
+    struct hash<tuple<int, bool, bool>> {
+        size_t operator()(const tuple<int, bool, bool>& t) const {
+            auto hash1 = hash<int>{}(get<0>(t));
+            auto hash2 = hash<bool>{}(get<1>(t));
+            auto hash3 = hash<bool>{}(get<2>(t));
+            return ((hash1 ^ (hash2 << 1)) >> 1) ^ (hash3 << 1);
+        }
+    };
+}
 
 unordered_map<tuple<int,int,bool,bool>, int> memoG;
 unordered_map<tuple<int,bool,bool>, int> memoF;
@@ -47,21 +72,16 @@ bool findPairAndGetValue(int a, int b) {
 void fillVarOccsArray() {
     coNestedVariableOccs.resize(numOfVars + 1);
 
+    for (int clauseIndex = 1; clauseIndex <= numOfClauses; clauseIndex++) {
+        const vector<int>& clause = coNestedCNF[clauseIndex];
+        for (int literal : clause) {
+            int var = abs(literal);
+            coNestedVariableOccs[var].push_back(clauseIndex);
+        }
+    }
+
     for (int i = 1; i <= numOfVars; i++) {
-        // Add both occurances to a vector for future reference
-        
-
-        set<int> posOccurrences = vars[i].getPositiveOccurrances();
-        set<int> negOccurrences = vars[i].getNegativeOccurrances();
-
-        vector<int> mergedOccs(posOccurrences.size() + negOccurrences.size());
-
-        // Merge the occurrences and sort
-        std::merge(posOccurrences.begin(), posOccurrences.end(), negOccurrences.begin(), negOccurrences.end(), mergedOccs.begin());
-
-        // Assign to the main vector
-        coNestedVariableOccs[i].resize(mergedOccs.size());
-        coNestedVariableOccs[i] = mergedOccs;
+        coNestedVariableOccs[i].erase(unique(coNestedVariableOccs[i].begin(), coNestedVariableOccs[i].end()), coNestedVariableOccs[i].end());
     }
 }
 
@@ -72,10 +92,13 @@ void fillDegreesforVars() {
 }
 
 bool coNestedPrecedesCompare(int a, int b) {
+    printf("Checking for a: %i, b: %i\: n", a, b);
     if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) & 
         (coNestedVariableOccs[b][varDegrees[b]-1] <= coNestedVariableOccs[a][varDegrees[a]-1])) {
+            printf("True\n");
             return true;
     }
+    printf("False\n");
     return false;
 }
 
@@ -159,10 +182,19 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
 }
 
 void defineTriangleSets() {
+
+    printf("clause occs:\n");
+    for (int i = 1; i <= numOfVars; i++) {
+        printf("Variable %i: ", i);
+        for (int occ : coNestedVariableOccs[i]) {
+            printf("%i ", occ);
+        }
+        printf("\n");
+    }
     for (int i = 1; i <= numOfVars; i++) {
         int varDegree = varDegrees[i];
+        int startClause = coNestedVariableOccs[i][0];
         for (int j = 0; j < varDegree - 1; j++) {
-            int startClause = coNestedVariableOccs[i][j];
             int endClause = coNestedVariableOccs[i][j+1];
             printf("for variable %i with j %i, startClause: %i, endClause: %i\n", i, j, startClause, endClause);
             
@@ -178,7 +210,7 @@ void defineTriangleSets() {
                 printf("\n");
             }
 
-            triangleSets[i * 100 + j] = triangleSet; 
+            triangleSets[i * 100 + endClause] = triangleSet; 
         }
     }
 }
@@ -208,6 +240,24 @@ int findXMax (const vector<vector<int>>& X) {
     return xMax;
 }
 
+// Function to compute theta^\epsilon(x, alpha, beta)_i
+int computeThetaEpsilon(int x, bool epsilon, bool alpha, bool beta, int i) {
+    int startClause = coNestedVariableOccs[x][i];
+    int endClause = coNestedVariableOccs[x][i + 1];
+
+    bool clause1Condition = (find(coNestedCNF[startClause].begin(), coNestedCNF[startClause].end(), x) != coNestedCNF[startClause].end());
+    bool clause2Condition = (find(coNestedCNF[endClause].begin(), coNestedCNF[endClause].end(), x) != coNestedCNF[endClause].end());
+
+    if ((clause1Condition && epsilon != alpha) || (!clause1Condition && epsilon == alpha) ||
+        (clause2Condition && epsilon != beta) || (!clause2Condition && epsilon == beta)) {
+        return INT_MIN;
+    } else {
+        return (alpha ? 1 : 0) + (beta ? 1 : 0);
+    }
+}
+
+
+
 // Function to find minimal and maximal variables in X(x, i)
 pair<int, int> findMinMaxInTriangle(int x, int i) {
     set<int> triangleSet = triangleSets[x * 100 + i];
@@ -220,8 +270,9 @@ pair<int, int> findMinMaxInTriangle(int x, int i) {
 // Function to compute f^\epsilon(x, alpha, beta)_ii+1
 int computeFiiPlus1(int x, bool epsilon, bool alpha, bool beta, int i) {
     int thetaEpsilon = computeThetaEpsilon(x, epsilon, alpha, beta, i);
+    int g(int x, int y, bool alpha, bool beta); // Forward declaration
 
-    auto [xMin, xMax] = findMinMaxinTriangle(x,i);
+    auto [xMin, xMax] = findMinMaxInTriangle(x,i);
     if (xMin == INT_MAX || xMax == INT_MIN){
         return thetaEpsilon;
     }
@@ -234,20 +285,24 @@ int computeFiiPlus1(int x, bool epsilon, bool alpha, bool beta, int i) {
                 for (bool betaDoublePrime : {true, false}) {
                 int current = thetaEpsilon;
 
-                    if (coNestedVariableOccs[x][i] == coNestedVariableOccs[xMin][0] && 
-                        coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i + 1]) {
-                        current +=  g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (alphaDoublePrime && betaDoublePrime ? 1 : 0);
+                    if (coNestedVariableOccs[x][i-1] == coNestedVariableOccs[xMin][0] && 
+                        coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i]) {
+                        current +=  g(xMin, xMax, alphaDoublePrime, betaDoublePrime) -
+                                     (alphaDoublePrime && alphaPrime ? 1 : 0) -
+                                     (betaDoublePrime && betaPrime ? 1 : 0);
                         maxValue = max(maxValue,current);
-                    } else if (coNestedVariableOccs[x][i] < coNestedVariableOccs[xMin][0] && 
-                               coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i + 1]){
-                        current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (betaDoublePrime ? 1 : 0);
+                    } else if (coNestedVariableOccs[x][i-1] < coNestedVariableOccs[xMin][0] && 
+                               coNestedVariableOccs[xMax].back() == coNestedVariableOccs[x][i]){
+                        current += g(xMin, xMax, alphaPrime, betaDoublePrime) -
+                                    (betaPrime && betaDoublePrime ? 1 : 0);
                         maxValue = max(maxValue, current);
-                    } else if (coNestedVariableOccs[x][i] == coNestedVariableOccs[xMin][0] &&
-                               coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i + 1]) {
-                        current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime) - (alphaDoublePrime ? 1 : 0);
+                    } else if (coNestedVariableOccs[x][i-1] == coNestedVariableOccs[xMin][0] &&
+                               coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i]) {
+                        current += g(xMin, xMax, alphaDoublePrime, betaPrime) - 
+                                    (alphaPrime && alphaDoublePrime ? 1 : 0);
                         maxValue = max(maxValue, current);
-                    }  else if (coNestedVariableOccs[x][i] < coNestedVariableOccs[xMin][0] && 
-                                coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i + 1]) {
+                    }  else if (coNestedVariableOccs[x][i-1] < coNestedVariableOccs[xMin][0] && 
+                                coNestedVariableOccs[xMax].back() < coNestedVariableOccs[x][i]) {
                         current += g(xMin, xMax, alphaDoublePrime, betaDoublePrime);
                         maxValue = max(maxValue, current);
                     }
@@ -344,6 +399,10 @@ void conestedAlgorithm() {
     
     while (!variables.empty()) {
         vector<int> Xk = findPrecMaximalElements(variables);
+
+        // Debugging: Print the size of variables and Xk
+        printf("Size of variables: %zu\n", variables.size());
+        printf("Size of Xk: %zu\n", Xk.size());
         X.push_back(Xk);
         for (int x : Xk) {
             variables.erase(x);
@@ -386,8 +445,12 @@ void conestedAlgorithm() {
         }
         printf("\n");
     }
-    /*M = max(g(x_min, x_max,true,true),
+
+    M = max({g(x_min, x_max,true,true),
            g(x_min, x_max,true,false),
            g(x_min, x_max,false,true),
-           g(x_min, x_max,false,false));*/
+           g(x_min, x_max,false,false)});
+
+    printf("M %i\n");
+
 }
