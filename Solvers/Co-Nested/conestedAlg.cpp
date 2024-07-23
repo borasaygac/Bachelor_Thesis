@@ -98,6 +98,23 @@ bool isDirectPredecessorInPred(int a, int b) {
     return false;
 }
 
+vector<int> findPrecMaximalElements(set<int> &variables) {
+    vector<int> maximalElements;
+    for (int x : variables) {
+        bool isPrecMaximal = true;
+        for (int y : variables) {
+            if ((x != y) & coNestedPrecedesCompare(x, y)) {
+                isPrecMaximal = false;
+                break;
+            }
+        }
+        if (isPrecMaximal) {
+            maximalElements.push_back(x);
+        }
+    }
+    return maximalElements;
+}
+
 
 void conestedAlgorithm() {
 
@@ -110,11 +127,29 @@ void conestedAlgorithm() {
     
     generateLessThanResults();
 
-    printf("precedes(1,2): %i", coNestedPrecedesCompare(1,2) );
+    set<int> variables;
+    for (int i = 1; i <= numOfVars; i++) {
+        variables.insert(i);
+    }
+
+    vector<vector<int>> X;
     
-    // Test cases for direct predecessor checks
-    printf("Is x1 a direct predecessor of x2 in < : %i\n", isDirectPredecessorInLess(1, 2));
-    printf("Is x1 a direct predecessor of x4 in pred : %i\n", isDirectPredecessorInPred(1, 4));
+    while (!variables.empty()) {
+        vector<int> Xk = findPrecMaximalElements(variables);
+        X.push_back(Xk);
+        for (int x : Xk) {
+            variables.erase(x);
+        }
+    }
+
+    // Output the sets X^k
+    for (size_t i = 0; i < X.size(); ++i) {
+        printf("X^%i:", i);
+        for (int x : X[i]) {
+            printf("%i ", x);
+        }
+        printf("\n");
+    }
 
 
 }
