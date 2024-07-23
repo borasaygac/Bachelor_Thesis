@@ -57,9 +57,9 @@ def construct_graph_from_cnf(cnf):
         nx.draw(G, pos, edgelist=clause_to_var_edges, edge_color='blue',
                 label='Clause to Variable Edges')
     
-    # Draw the outerplanar edges
-        nx.draw(G, pos, edgelist=outerplanar_edges, edge_color='green',
-                label='Outerplanar Edges')
+        # Draw the outerplanar edges
+        #nx.draw(G, pos, edgelist=outerplanar_edges, edge_color='green',
+        #        label='Outerplanar Edges')
     
         clause_node_list= [i for i in range(1, num_clauses)]
         nx.draw_networkx_nodes(G, pos, nodelist= clause_node_list, node_shape="s", node_color='lightblue', node_size=600
