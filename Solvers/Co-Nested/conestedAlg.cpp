@@ -165,14 +165,17 @@ void defineTriangleSets() {
             int startClause = coNestedVariableOccs[i][j];
             int endClause = coNestedVariableOccs[i][j+1];
             printf("for variable %i with j %i, startClause: %i, endClause: %i\n", i, j, startClause, endClause);
-            printf("startClause: %i, endClause: %i\n", startClause, endClause);
+            
             set<int> triangleSet;
 
-            for (int clauseIDx = startClause; clauseIDx <= endClause; clauseIDx++) {
+            for (int clauseIDx = startClause; clauseIDx < endClause; clauseIDx++) {
+                printf("Considering clause %i: ", clauseIDx);
                 for (int lit : coNestedCNF[clauseIDx]) {
                     int absLit = abs(lit);
+                    printf("%i ", absLit);
                     triangleSet.insert(absLit);
                 }
+                printf("\n");
             }
 
             triangleSets[i * 100 + j] = triangleSet; 
@@ -204,6 +207,15 @@ int findXMax (const vector<vector<int>>& X) {
     }
     return xMax;
 }
+
+// Function to find minimal and maximal variables in X(x, i)
+pair<int, int> findMinMaxInTriangle(int x, int i) {
+    set<int> triangleSet = triangleSets[x * 100 + i];
+    int xMin = *min_element(triangleSet.begin(), triangleSet.end());
+    int xMax = *max_element(triangleSet.begin(), triangleSet.end());
+    return {xMin, xMax};
+}
+
 
 // Function to compute f^\epsilon(x, alpha, beta)_ii+1
 int computeFiiPlus1(int x, bool epsilon, bool alpha, bool beta, int i) {
