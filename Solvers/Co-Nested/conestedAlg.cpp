@@ -40,7 +40,7 @@ unordered_map<tuple<int,int,bool,bool>, int> memoG;
 unordered_map<tuple<int,bool,bool>, int> memoF;
 
 bool coNestedLessThanCompare(int a, int b) {
-    if (coNestedVariableOccs[a][coNestedVariableOccs[a].size()-1] <= coNestedVariableOccs[b][0]){
+    if (coNestedVariableOccs[a].back() <= coNestedVariableOccs[b][0]){
         return true;
     } 
     return false;
@@ -92,7 +92,7 @@ void fillDegreesforVars() {
 }
 
 bool coNestedPrecedesCompare(int a, int b) {
-    printf("Checking for a: %i, b: %i\: n", a, b);
+    printf("Checking for a: %i, b: %i: n", a, b);
     if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) && 
         (coNestedVariableOccs[b].back() <= coNestedVariableOccs[a].back())) {
             printf("True\n");
@@ -217,29 +217,20 @@ void defineTriangleSets() {
     }
 }
 
-int findXMin (const vector<vector<int>>& X) {
-    int xMin = X[0][0];
-    for (int i : X[0]) {
-        if (varDegrees[xMin] < varDegrees[i] && coNestedVariableOccs[i][0] == 1) {
-            xMin = i;
-        }
-    }
-    return xMin;
-}
+// Function to find the minimal and maximal elements in X^0 regarding the < relation
+pair<int, int> findMinMaxInX0(const vector<vector<int>> &X) {
+    int x_min = X[0][0];
+    int x_max = X[0][0];
 
-int findXMax (const vector<vector<int>>& X) {
-    int xMax = X[0][0];
-    int lowestOcc = coNestedVariableOccs[xMax][0];
-    int highestOcc = coNestedVariableOccs[xMax][varDegrees[xMax]-1];
-    for (int i : X[0]) {
-        if (coNestedVariableOccs[xMax][varDegrees[xMax]] < coNestedVariableOccs[i][varDegrees[i]] &&
-            coNestedVariableOccs[i][0] < lowestOcc) {
-            xMax = i;
-            lowestOcc = coNestedVariableOccs[i][0];
-            highestOcc = coNestedVariableOccs[i][varDegrees[i]-1];
+    for (int x : X[0]) {
+        if (coNestedLessThanCompare(x, x_min)) {
+            x_min = x;
+        }
+        if (coNestedLessThanCompare(x_max, x)) {
+            x_max = x;
         }
     }
-    return xMax;
+    return {x_min, x_max};
 }
 
 // Function to compute theta^\epsilon(x, alpha, beta)_i
@@ -441,8 +432,7 @@ void conestedAlgorithm() {
 
     // Example: Check the relation for some pairs
 
-    int x_min = findXMin(X);
-    int x_max = findXMax(X);
+    auto [x_min, x_max] = findMinMaxInX0(X);
     
     printf("x_max: %i\n", x_max);
     printf("x_min: %i\n", x_min);
