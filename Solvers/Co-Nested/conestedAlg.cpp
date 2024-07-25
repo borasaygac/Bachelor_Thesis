@@ -161,18 +161,20 @@ bool coNestedPrecedesCompare(int a, int b) {
 }
 
 bool isDirectPredecessorInLess(int a, int b) {
+
     if (coNestedLessThanCompare(a, b)) {
-        for (int z = 1; z <= CNnumOfVars; z++) {
-            if (coNestedVariableOccs[z].empty()) {
-                continue;
-            }
-            if (z != a && z != b && coNestedLessThanCompare(a, z) && coNestedLessThanCompare(z, b)) {
-                return false;
+        printf("Checking if %d is a direct predecessor of %d\n", a, b);
+        for (int z = 1; z <= numOfVars; z++) {
+            if (z != a && z != b && !coNestedVariableOccs[z].empty() && 
+                coNestedLessThanCompare(a, z) && coNestedLessThanCompare(z, b)) {
+                printf("Intermediate variable %d found between %d and %d\n", z, a, b);
+                return false; // Intermediate variable found
             }
         }
-        return true;
+        printf("%d is a direct predecessor of %d\n", a, b);
+        return true; // No intermediate variable found, a is a direct predecessor of b
     }
-    return false;
+    return false; // a is not less than b
 }
 
 bool isDirectPredecessorInPred(int a, int b) {
@@ -213,7 +215,11 @@ vector<int> findPrecMaximalElements(set<int> &variables) {
 
 // Equivalence relation
 bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>& levels) {
-    int xlevel = -1; int ylevel = -1;
+    printf("Checking if %d is less than %d with curly line below.\n", x, y);
+    int xlevel = -1;
+    int ylevel = -1;
+
+    // Determine levels for x and y
     for (size_t k = 0; k < levels.size(); ++k) {
         if (find(levels[k].begin(), levels[k].end(), x) != levels[k].end()) {
             xlevel = k;
@@ -223,24 +229,32 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
         }
     }
 
+    printf("x: %d, y: %d, xlevel: %d, ylevel: %d\n", x, y, xlevel, ylevel);
+
+    // Check if x and y are on the same level and valid levels are found
     if (xlevel != ylevel || xlevel == -1 || ylevel == -1) {
+        printf("Not on the same level or invalid levels.\n");
         return false;
     }
 
+    // Check if x < y
     if (!coNestedLessThanCompare(x, y)) {
+        printf("x %i is not less than y. %i\n",x,y);
         return false;
     }
 
+    // If both are on level 0, return true since they are comparable and there's no intermediate level
     if (xlevel == 0 && ylevel == 0) {
         return true;
     }
 
-    // check if there is a variable z in level xlevel-1 such that x(degree(x) <= z(i) <= y(1))
-    const vector<int>& sublevel = levels[xlevel-1];
-    for (int z: sublevel){
+    // Check for the intermediate variable z in the level just below xlevel
+    const vector<int>& sublevel = levels[xlevel - 1];
+    for (int z : sublevel) {
         for (int i = 0; i < varDegrees[z]; ++i) {
             if (coNestedVariableOccs[x].back() <= coNestedVariableOccs[z][i] 
-            && (coNestedVariableOccs[z][i] <= coNestedVariableOccs[y][0])) {
+                && coNestedVariableOccs[z][i] <= coNestedVariableOccs[y][0]) {
+                printf("Intermediate variable z: %d found making the condition false.\n", z);
                 return false;
             }
         }
@@ -248,10 +262,11 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
 
     return true;
 }
-
 pair<int, int> findMinMaxElements(const set<int>& variables, const vector<vector<int>>& levels) {
     int minElement = -1;
     int maxElement = -1;
+
+    printf("TESTSTEST\n");
 
     for (int x : variables) {
         bool isMinimal = true;
@@ -313,7 +328,7 @@ set<int> defineTriangleSets(int x, int i, int j) {
 // Function to find the minimal and maximal elements in X^0 regarding the < relation
 pair<int, int> findMinMaxInX0(const vector<vector<int>> &X) {
     int x_min = X[0][0];
-    int x_max = X[0][0];
+    int x_max = X[0].back();
 
     for (int x : X[0]) {
         if (coNestedLessThanCompare(x, x_min)) {
@@ -332,13 +347,17 @@ int computeThetaEpsilon(int x, bool epsilon, bool alpha, bool beta, int i) {
     int startClause = coNestedVariableOccs[x][i];
     int endClause = coNestedVariableOccs[x][i + 1];
 
-    bool clause1Condition = (find(coNestedVariableOccs[startClause].begin(), coNestedVariableOccs[startClause].end(), x) != coNestedVariableOccs[startClause].end());
-    bool clause2Condition = (find(coNestedVariableOccs[endClause].begin(), coNestedVariableOccs[endClause].end(), x) != coNestedVariableOccs[endClause].end());
+    bool clause1Condition = (find(coNestedCNF[startClause].begin(), coNestedCNF[startClause].end(), x) != coNestedCNF[startClause].end() ||
+                             find(coNestedCNF[startClause].begin(), coNestedCNF[startClause].end(), -x) != coNestedCNF[startClause].end());
+    bool clause2Condition = (find(coNestedCNF[endClause].begin(), coNestedCNF[endClause].end(), x) != coNestedCNF[endClause].end() || 
+                             find(coNestedCNF[endClause].begin(), coNestedCNF[endClause].end(), -x) != coNestedCNF[endClause].end());
 
     if ((clause1Condition && epsilon != alpha) || (!clause1Condition && epsilon == alpha) ||
         (clause2Condition && epsilon != beta) || (!clause2Condition && epsilon == beta)) {
-        return INT_MIN;
+        printf("Returning -100\n");
+        return -100;
     } else {
+        printf("Returning %i\n", (alpha ? 1 : 0) + (beta ? 1 : 0));
         return (alpha ? 1 : 0) + (beta ? 1 : 0);
     }
 }
@@ -353,42 +372,6 @@ pair<int, int> findMinMaxInTriangle(int x, int i) {
     return {xMin, xMax};
 }
 
-
-// Function to compute f^\epsilon(x, alpha, beta)_ii+1
-int computeFiiPlus1(int x, bool epsilon, bool alpha, bool beta, int i) {
-    int thetaEpsilon = computeThetaEpsilon(x, epsilon, alpha, beta, i);
-    int g(int x, int y, bool alpha, bool beta); // Forward declaration
-
-    auto [xMin, xMax] = findMinMaxInTriangle(x,i);
-    if (xMin == INT_MAX || xMax == INT_MIN){
-        return thetaEpsilon;
-    }
-
-    // Four cases 
-    int maxValue = INT_MIN;
-    
-    return maxValue;
-}
-
-
-// Recursive function to compute f^\epsilon(x, alpha, beta)_{1, degree(x)}
-int computeF1DegreeX(int x, bool epsilon, bool alpha, bool beta, int start, int end){
-    if (start == end - 1) {
-        return computeFiiPlus1(x, epsilon, alpha, beta, start);
-    }
-
-    int maxValue = INT_MIN;
-    for (bool alphaPrime : {true, false}){
-        for (bool betaPrime : {true, false}){
-            int current = computeF1DegreeX(x, epsilon, alpha, beta,start, end - 1) +
-                          computeFiiPlus1(x, epsilon, betaPrime, beta, end -1) - 
-                          (alphaPrime && betaPrime ? 1 : 0);
-            maxValue = max(maxValue, current);
-        }
-    }
-    return maxValue;
-}
-
 // Function to compute f(x, alpha, beta)
 int f(int x, bool alpha, bool beta) {
     int g(int x, int y, bool alpha, bool beta); // Forward declaration
@@ -396,7 +379,7 @@ int f(int x, bool alpha, bool beta) {
     int currentMax = 0;
 
     for (int i = 1; i < varDegrees[x] - 1; i++) {
-        for (int j = i + 1; 1 <= varDegrees[x]; j++) {
+        for (int j = i + 1; j <= varDegrees[x]; j++) {
             set<int> triangleSet = defineTriangleSets(x, i, j);
             if (triangleSet.empty()) {
                 // if X(X,i) is empty, then f(x, alpha, beta) = theta(epsilon, alpha, beta)_i
@@ -417,6 +400,7 @@ int f(int x, bool alpha, bool beta) {
                 // which has 4 cases
                 // the first elem of minMax is minimal element and the second is maximal element
                 pair<int, int> minMax = findMinMaxElements(triangleSet,X);
+                printf("minMax: %i, %i\n", minMax.first, minMax.second);
                 for (bool alphaPrime : {true, false}) {
                     for (bool alphaDoublePrime : {true, false}) {
                         for (bool betaPrime : {true, false}) {
@@ -462,9 +446,12 @@ int f(int x, bool alpha, bool beta) {
 
 int g(int x, int y, bool alpha, bool beta) {
     if (x == y) {
-        return f(x, alpha, beta);
         printf("x == y\n");
         printf("Call to f(%i, %i, %i)\n", x, alpha, beta);
+        int res = f(x, alpha, beta);
+        printf("Result: %i\n", res);
+        return res;
+        
     }
 
     auto memoKey = make_tuple(x,y,alpha,beta);
@@ -579,8 +566,9 @@ void conestedAlgorithm() {
     }
     
     auto [x_min, x_max] = findMinMaxInX0(X);
+    printf("x_min: %i, x_max: %i\n", x_min, x_max);
 
-    int result1 = g(x_min, x_max, true, true);
+    int result1 = g(1, 1, true, true);
     int result2 = g(x_min, x_max, true, false);
     int result3 = g(x_min, x_max, false, true);
     int result4 = g(x_min, x_max, false, false);
