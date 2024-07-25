@@ -107,7 +107,7 @@ bool findPairAndGetValue(int a, int b) {
 void fillVarOccsArray() {
     coNestedVariableOccs.resize(numOfVars + 1);
 
-    for (int clauseIndex = 1; clauseIndex <= numOfClauses; clauseIndex++) {
+    for (int clauseIndex = 1; clauseIndex <= coNestedCNF.size(); clauseIndex++) {
         const vector<int>& clause = coNestedCNF[clauseIndex];
         for (int literal : clause) {
             int var = abs(literal);
@@ -415,14 +415,14 @@ void conestedAlgorithm() {
 
     //Lemma 2.1: If var degree = 1, then theta' = theta - c_(x(1)) and M(theta) = M(theta') + 1
     // Therefore the clause is deleted from the cnf
-    int litsremoved = removeLitsOccurringOnce();
+    M += removeLitsOccurringOnce();
 
-    printf("lits removed %i\n",litsremoved);
+    printf("lits removed %i\n",M);
     printf("new CNF\n");
-    printf("num of clauses %i\n",numOfClauses - litsremoved);
+    printf("num of clauses %i\n",numOfClauses - M);
     printf("og cnf size %i\n",cnf.size());
     printf("New cnf size %i\n",coNestedCNF.size());
-    for (int i = 0; i <= numOfClauses - litsremoved; i++){
+    for (int i = 0; i <= coNestedCNF.size(); i++){
         printf("Clause %i:",i);
         for (int j = 0; j < coNestedCNF[i].size(); j++) {
             printf("%i ", coNestedCNF[i][j]);
