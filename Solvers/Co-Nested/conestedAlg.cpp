@@ -1,6 +1,7 @@
 #include "../../globals.hpp"
 #include <algorithm>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <tuple>
 
@@ -38,6 +39,40 @@ namespace std {
 
 unordered_map<tuple<int,int,bool,bool>, int> memoG;
 unordered_map<tuple<int,bool,bool>, int> memoF;
+
+int removeLitsOccurringOnce() {
+    unordered_set<int> clausesToBeRemoved;
+    int removedLitsNumber = 0;
+
+    for (int i = 1; i <= numOfVars; i++) {
+        if (vars[i].getTotalOccurances() == 1) {
+            int clauseToBeRemoved = 0;
+            printf("Removing lit %i", i);
+            if (!vars[i].getPositiveOccurrances().empty()) {
+                clauseToBeRemoved = *vars[i].getPositiveOccurrances().begin();
+            } else if (!vars[i].getNegativeOccurrances().empty()) {
+                clauseToBeRemoved = *vars[i].getNegativeOccurrances().begin();
+            }
+
+            // Insert the clause to be removed into the set
+            clausesToBeRemoved.insert(clauseToBeRemoved);
+            removedLitsNumber++;
+        }
+    }
+
+    // Create a new CNF without the removed clauses
+    vector<vector<int>> newCoNestedCNF;
+    for (int i = 0; i < coNestedCNF.size(); i++) {
+        if (clausesToBeRemoved.find(i) == clausesToBeRemoved.end()) {
+            newCoNestedCNF.push_back(coNestedCNF[i]);
+        }
+    }
+
+    // Update the global CNF
+    coNestedCNF = newCoNestedCNF;
+
+    return removedLitsNumber;
+}
 
 bool coNestedLessThanCompare(int a, int b) {
     if (coNestedVariableOccs[a].back() <= coNestedVariableOccs[b][0]){
@@ -235,6 +270,7 @@ pair<int, int> findMinMaxInX0(const vector<vector<int>> &X) {
 
 // Function to compute theta^\epsilon(x, alpha, beta)_i
 int computeThetaEpsilon(int x, bool epsilon, bool alpha, bool beta, int i) {
+    // Lemma 1 and 2 -- no var can occur only once. Then m+1 anyways so we need to change it accordingly
     int startClause = coNestedVariableOccs[x][i];
     int endClause = coNestedVariableOccs[x][i + 1];
 
@@ -374,12 +410,34 @@ int g(int x, int y, bool alpha, bool beta) {
 
 void conestedAlgorithm() {
 
+    int M = 0; // M denotes the number of simultaneously satisfiable clauses
+
+
+    //Lemma 2.1: If var degree = 1, then theta' = theta - c_(x(1)) and M(theta) = M(theta') + 1
+    // Therefore the clause is deleted from the cnf
+    int litsremoved = removeLitsOccurringOnce();
+
+    printf("lits removed %i\n",litsremoved);
+    printf("new CNF\n");
+    printf("num of clauses %i\n",numOfClauses - litsremoved);
+    printf("og cnf size %i\n",cnf.size());
+    printf("New cnf size %i\n",coNestedCNF.size());
+    for (int i = 0; i <= numOfClauses - litsremoved; i++){
+        printf("Clause %i:",i);
+        for (int j = 0; j < coNestedCNF[i].size(); j++) {
+            printf("%i ", coNestedCNF[i][j]);
+        }
+        printf("\n");
+    }
+    
+
     fillVarOccsArray();
+
+    
     
     varDegrees.resize(numOfVars + 1);
     fillDegreesforVars();
 
-    int M = 0; // M denotes the number of simultaneously satisfiable clauses
     
     generateLessThanResults();
 
@@ -431,9 +489,8 @@ void conestedAlgorithm() {
     }
 
     // Example: Check the relation for some pairs
-
     auto [x_min, x_max] = findMinMaxInX0(X);
-    
+
     printf("x_max: %i\n", x_max);
     printf("x_min: %i\n", x_min);
     
