@@ -14,6 +14,8 @@ vector<int> varDegrees;
 
 unordered_map<int, set<int>> triangleSets;
 
+vector<vector<int>> X; // X^0, X^1, ..., X^k
+
 int CNnumOfVars = 0;
 int CNnumOfClauses = 0;
 
@@ -201,7 +203,7 @@ vector<int> findPrecMaximalElements(set<int> &variables) {
     return maximalElements;
 }
 
-
+// Equivalence relation
 bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>& levels) {
     int xlevel = -1; int ylevel = -1;
     for (size_t k = 0; k < levels.size(); ++k) {
@@ -221,7 +223,7 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
         return false;
     }
 
-    if (xlevel == 0) {
+    if (xlevel == 0 && ylevel == 0) {
         return true;
     }
 
@@ -229,7 +231,7 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
     const vector<int>& sublevel = levels[xlevel-1];
     for (int z: sublevel){
         for (int i = 0; i < varDegrees[z]; ++i) {
-            if (coNestedVariableOccs[x][varDegrees[x]-1] <= coNestedVariableOccs[z][i] 
+            if (coNestedVariableOccs[x].back() <= coNestedVariableOccs[z][i] 
             && (coNestedVariableOccs[z][i] <= coNestedVariableOccs[y][0])) {
                 return false;
             }
@@ -302,8 +304,8 @@ int computeThetaEpsilon(int x, bool epsilon, bool alpha, bool beta, int i) {
     int startClause = coNestedVariableOccs[x][i];
     int endClause = coNestedVariableOccs[x][i + 1];
 
-    bool clause1Condition = (find(coNestedCNF[startClause].begin(), coNestedCNF[startClause].end(), x) != coNestedCNF[startClause].end());
-    bool clause2Condition = (find(coNestedCNF[endClause].begin(), coNestedCNF[endClause].end(), x) != coNestedCNF[endClause].end());
+    bool clause1Condition = (find(coNestedVariableOccs[startClause].begin(), coNestedVariableOccs[startClause].end(), x) != coNestedVariableOccs[startClause].end());
+    bool clause2Condition = (find(coNestedVariableOccs[endClause].begin(), coNestedVariableOccs[endClause].end(), x) != coNestedVariableOccs[endClause].end());
 
     if ((clause1Condition && epsilon != alpha) || (!clause1Condition && epsilon == alpha) ||
         (clause2Condition && epsilon != beta) || (!clause2Condition && epsilon == beta)) {
@@ -413,22 +415,40 @@ int g(int x, int y, bool alpha, bool beta) {
 
     for (bool alphaPrime : {true,false}) {
         for(bool betaPrime : {true, false}) {
-            int current = f(x,alpha,betaPrime);
+            int case1CurrentMax = 0;
+            int case2CurrentMax = 0;
+            int case1Current = 0;
+            int case2Current = 0;
 
             // Find direct successor x' of x in lesswithcurlylinebelow relation
-            for (int xPrime = 1; xPrime <= CNnumOfVars; ++xPrime){
-                if (x == xPrime || isDirectPredecessorInPred(x, xPrime)) {
+            for (int xPrime = 1; xPrime <= numOfVars; ++xPrime){
+                if (x == xPrime || coNestedVariableOccs[xPrime].empty()) {
                     continue;
                 }
-                if (coNestedVariableOccs[x].back() == coNestedVariableOccs[xPrime][0]){
-                    // Case 1:  x(degree(x)) == x'(1)
-                    current += g(xPrime,y,alphaPrime,beta);
-                } else if (coNestedVariableOccs[x].back() < coNestedVariableOccs[xPrime][0]) {
-                    // Case 2: x(degree(x)) < x'(1)
-                    current += g(xPrime,y,alphaPrime,beta);
+                if (isDirectPredecessorInLess(x, xPrime)) {
+                    if (coNestedLessThanWithCurlyLineBelow(xPrime, y, X)) {
+                        if (coNestedVariableOccs[x].back() == coNestedVariableOccs[xPrime][0]) {
+                            // Case 1:  x(degree(x)) == x'(1)
+                            case1Current = f(x, alphaPrime, beta) + 
+                                           g(xPrime, y, alpha, betaPrime) -
+                                           (alphaPrime && betaPrime ? 1 : 0);
+
+                            if (case1Current > case1CurrentMax) {
+                                case1CurrentMax = case1Current;
+                            }
+                        } else if (coNestedVariableOccs[x].back() < coNestedVariableOccs[xPrime][0]) {
+                            // Case 2: x(degree(x)) < x'(1)
+                            case2Current = f(x, alpha, betaPrime) +
+                                           g(xPrime, y, alphaPrime, beta);
+
+                            if (case2Current > case2CurrentMax) {
+                                case2CurrentMax = case2Current;
+                            }
+                        }
+                    }
                 }
             }
-            result = max(result,current);
+            result = max(result,case1CurrentMax,case2CurrentMax);
         }
     }
 
@@ -479,7 +499,7 @@ void conestedAlgorithm() {
         }
     }
 
-    vector<vector<int>> X; // X^0, X^1, ..., X^k
+
 
     printf("conested cnf: \n");
     for (size_t i = 0; i < coNestedCNF.size(); ++i) {
