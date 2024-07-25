@@ -14,6 +14,9 @@ vector<int> varDegrees;
 
 unordered_map<int, set<int>> triangleSets;
 
+int CNnumOfVars = 0;
+int CNnumOfClauses = 0;
+
 namespace std {
     template <>
     struct hash<tuple<int, int, bool, bool>> {
@@ -40,14 +43,16 @@ namespace std {
 unordered_map<tuple<int,int,bool,bool>, int> memoG;
 unordered_map<tuple<int,bool,bool>, int> memoF;
 
+
 int removeLitsOccurringOnce() {
     unordered_set<int> clausesToBeRemoved;
     int removedLitsNumber = 0;
+    int removedClausesNumber = 0;
 
     for (int i = 1; i <= numOfVars; i++) {
         if (vars[i].getTotalOccurances() == 1) {
             int clauseToBeRemoved = 0;
-            printf("Removing lit %i", i);
+            printf("Removing lit %i\n", i);
             if (!vars[i].getPositiveOccurrances().empty()) {
                 clauseToBeRemoved = *vars[i].getPositiveOccurrances().begin();
             } else if (!vars[i].getNegativeOccurrances().empty()) {
@@ -64,12 +69,21 @@ int removeLitsOccurringOnce() {
     vector<vector<int>> newCoNestedCNF;
     for (int i = 0; i < coNestedCNF.size(); i++) {
         if (clausesToBeRemoved.find(i) == clausesToBeRemoved.end()) {
+            printf("Adding clause %i\n", i);
             newCoNestedCNF.push_back(coNestedCNF[i]);
+        } else {
+            removedClausesNumber++;
         }
     }
 
     // Update the global CNF
     coNestedCNF = newCoNestedCNF;
+
+    // Update the number of clauses
+    numOfClauses = coNestedCNF.size();
+
+    CNnumOfClauses -= removedClausesNumber;
+    CNnumOfVars -= removedLitsNumber;
 
     return removedLitsNumber;
 }
@@ -82,11 +96,15 @@ bool coNestedLessThanCompare(int a, int b) {
 }
 
 void generateLessThanResults() {
-    for (int i = 1; i <= numOfVars; i++) {
-        for (int j = 1; j <= numOfVars; j++) {
+    for (int i = 1; i <= CNnumOfVars; i++) {
+        for (int j = 1; j <= CNnumOfVars; j++) {
             if (i != j) {
-                bool result = coNestedLessThanCompare(i,j);
-                coNestedLessThanResArr.push_back({{i,j},result});
+                if (coNestedVariableOccs[i].empty() || coNestedVariableOccs[j].empty()) {
+                    continue;
+                } else {
+                    bool result = coNestedLessThanCompare(i,j);
+                    coNestedLessThanResArr.push_back({{i,j},result});
+                }
             }
             
         }
@@ -107,7 +125,7 @@ bool findPairAndGetValue(int a, int b) {
 void fillVarOccsArray() {
     coNestedVariableOccs.resize(numOfVars + 1);
 
-    for (int clauseIndex = 1; clauseIndex <= coNestedCNF.size(); clauseIndex++) {
+    for (int clauseIndex = 1; clauseIndex < coNestedCNF.size(); clauseIndex++) {
         const vector<int>& clause = coNestedCNF[clauseIndex];
         for (int literal : clause) {
             int var = abs(literal);
@@ -122,7 +140,10 @@ void fillVarOccsArray() {
 
 void fillDegreesforVars() {
     for (int i = 1; i <= numOfVars; i++) {
-        varDegrees[i] = vars[i].getTotalOccurances();
+        if (coNestedVariableOccs[i].empty()) {
+            continue;
+        }
+        varDegrees[i] = coNestedVariableOccs[i].size();
     }
 }
 
@@ -139,7 +160,7 @@ bool coNestedPrecedesCompare(int a, int b) {
 
 bool isDirectPredecessorInLess(int a, int b) {
     if (coNestedLessThanCompare(a, b)) {
-        for (int z = 1; z <= numOfVars; z++) {
+        for (int z = 1; z <= CNnumOfVars; z++) {
             if (z != a && z != b && coNestedLessThanCompare(a, z) && coNestedLessThanCompare(z, b)) {
                 return false;
             }
@@ -151,7 +172,7 @@ bool isDirectPredecessorInLess(int a, int b) {
 
 bool isDirectPredecessorInPred(int a, int b) {
     if (coNestedPrecedesCompare(a, b)) {
-        for (int z = 1; z <= numOfVars; z++) {
+        for (int z = 1; z <= CNnumOfVars; z++) {
             if (z != a && z != b && coNestedPrecedesCompare(a, z) && coNestedPrecedesCompare(z, b)) {
                 return false;
             }
@@ -222,6 +243,9 @@ void defineTriangleSets() {
 
     printf("clause occs:\n");
     for (int i = 1; i <= numOfVars; i++) {
+        if (coNestedVariableOccs[i].empty()) {
+            continue;
+        }
         printf("Variable %i: ", i);
         for (int occ : coNestedVariableOccs[i]) {
             printf("%i ", occ);
@@ -229,15 +253,19 @@ void defineTriangleSets() {
         printf("\n");
     }
     for (int i = 1; i <= numOfVars; i++) {
+        if (coNestedVariableOccs[i].empty()) {
+            continue;
+        }
+        printf("Variable %i, degree: %i\n", i, varDegrees[i]);
         int varDegree = varDegrees[i];
         int startClause = coNestedVariableOccs[i][0];
-        for (int j = 0; j < varDegree - 1; j++) {
-            int endClause = coNestedVariableOccs[i][j+1];
+        for (int j = 1; j < varDegree; j++) {
+            int endClause = coNestedVariableOccs[i][j];
             printf("for variable %i with j %i, startClause: %i, endClause: %i\n", i, j, startClause, endClause);
             
             set<int> triangleSet;
 
-            for (int clauseIDx = startClause; clauseIDx < endClause; clauseIDx++) {
+            for (int clauseIDx = startClause; clauseIDx <= endClause; clauseIDx++) {
                 printf("Considering clause %i: ", clauseIDx);
                 for (int lit : coNestedCNF[clauseIDx]) {
                     int absLit = abs(lit);
@@ -388,7 +416,7 @@ int g(int x, int y, bool alpha, bool beta) {
             int current = f(x,alpha,betaPrime);
 
             // Find direct successor x' of x in lesswithcurlylinebelow relation
-            for (int xPrime = 1; xPrime <= numOfVars; ++xPrime){
+            for (int xPrime = 1; xPrime <= CNnumOfVars; ++xPrime){
                 if (x == xPrime || isDirectPredecessorInPred(x, xPrime)) {
                     continue;
                 }
@@ -410,6 +438,9 @@ int g(int x, int y, bool alpha, bool beta) {
 
 void conestedAlgorithm() {
 
+    CNnumOfClauses = numOfClauses;
+    CNnumOfVars = numOfVars;
+
     int M = 0; // M denotes the number of simultaneously satisfiable clauses
 
 
@@ -422,10 +453,10 @@ void conestedAlgorithm() {
     printf("num of clauses %i\n",numOfClauses - M);
     printf("og cnf size %i\n",cnf.size());
     printf("New cnf size %i\n",coNestedCNF.size());
-    for (int i = 0; i <= coNestedCNF.size(); i++){
+    for (int i = 0; i < coNestedCNF.size(); i++){
         printf("Clause %i:",i);
-        for (int j = 0; j < coNestedCNF[i].size(); j++) {
-            printf("%i ", coNestedCNF[i][j]);
+        for (int x : coNestedCNF[i]){
+            printf("%i ",x);
         }
         printf("\n");
     }
@@ -443,7 +474,9 @@ void conestedAlgorithm() {
 
     set<int> variables;
     for (int i = 1; i <= numOfVars; i++) {
-        variables.insert(i);
+        if (!coNestedVariableOccs[i].empty()) {
+            variables.insert(i);
+        }
     }
 
     vector<vector<int>> X; // X^0, X^1, ..., X^k
