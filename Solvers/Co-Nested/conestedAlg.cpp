@@ -46,13 +46,15 @@ unordered_map<tuple<int,int,bool,bool>, int> memoG;
 unordered_map<tuple<int,bool,bool>, int> memoF;
 
 
-int removeLitsOccurringOnce() {
+pair<int,bool> removeLitsOccurringOnce() {
     unordered_set<int> clausesToBeRemoved;
+    bool removedClauses = false;
     int removedLitsNumber = 0;
     int removedClausesNumber = 0;
 
     for (int i = 1; i <= numOfVars; i++) {
-        if (vars[i].getTotalOccurances() == 1) {
+        if (coNestedVariableOccs[i].size() == 1) {
+            printf("var Occs size for  %i= %i \n", i, coNestedVariableOccs[i].size());
             int clauseToBeRemoved = 0;
             printf("Removing lit %i\n", i);
             if (!vars[i].getPositiveOccurrances().empty()) {
@@ -64,6 +66,7 @@ int removeLitsOccurringOnce() {
             // Insert the clause to be removed into the set
             clausesToBeRemoved.insert(clauseToBeRemoved);
             removedLitsNumber++;
+            removedClauses = true;
         }
     }
 
@@ -87,7 +90,7 @@ int removeLitsOccurringOnce() {
     CNnumOfClauses -= removedClausesNumber;
     CNnumOfVars -= removedLitsNumber;
 
-    return removedLitsNumber;
+    return {removedLitsNumber, removedClauses};
 }
 
 bool coNestedLessThanCompare(int a, int b) {
@@ -125,6 +128,8 @@ bool findPairAndGetValue(int a, int b) {
 }
 
 void fillVarOccsArray() {
+    vector<vector<int>> emptyVec;
+    coNestedVariableOccs = emptyVec;
     coNestedVariableOccs.resize(numOfVars + 1);
 
     for (int clauseIndex = 1; clauseIndex < coNestedCNF.size(); clauseIndex++) {
@@ -135,7 +140,7 @@ void fillVarOccsArray() {
         }
     }
 
-    for (int i = 1; i <= numOfVars; i++) {
+    for (int i = 1; i <= CNnumOfVars; i++) {
         coNestedVariableOccs[i].erase(unique(coNestedVariableOccs[i].begin(), coNestedVariableOccs[i].end()), coNestedVariableOccs[i].end());
     }
 }
@@ -150,6 +155,7 @@ void fillDegreesforVars() {
 }
 
 bool coNestedPrecedesCompare(int a, int b) {
+    // x \\precedes y if x(1) <= y(1) and x(degree(x)) <= y(degree(y))
     printf("Checking for a: %i, b: %i: n", a, b);
     if ((coNestedVariableOccs[b][0] <= coNestedVariableOccs[a][0]) && 
         (coNestedVariableOccs[a].back() <= coNestedVariableOccs[b].back())) {
@@ -179,7 +185,10 @@ bool isDirectPredecessorInLess(int a, int b) {
 
 bool isDirectPredecessorInPred(int a, int b) {
     if (coNestedPrecedesCompare(a, b)) {
-        for (int z = 1; z <= CNnumOfVars; z++) {
+        for (int z = 1; z <= numOfVars; z++) {
+            if (coNestedVariableOccs[z].empty()) {
+                continue;
+            }
             if (z != a && z != b && coNestedPrecedesCompare(a, z) && coNestedPrecedesCompare(z, b)) {
                 return false;
             }
@@ -196,7 +205,7 @@ vector<int> findPrecMaximalElements(set<int> &variables) {
         bool isPrecMaximal = true;
         for (int y : variables) {
             if (x != y){
-                if(!coNestedPrecedesCompare(x, y)) {
+                if(!coNestedPrecedesCompare(y, x)) {
                     printf("%i ", x);
                     count++;
                     isPrecMaximal = false;
@@ -237,7 +246,7 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
         return false;
     }
 
-    // Check if x < y
+     // Check if x < y
     if (!coNestedLessThanCompare(x, y)) {
         printf("x %i is not less than y. %i\n",x,y);
         return false;
@@ -258,8 +267,8 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
                 return false;
             }
         }
-    }
-
+    }   
+    
     return true;
 }
 pair<int, int> findMinMaxElements(const set<int>& variables, const vector<vector<int>>& levels) {
@@ -274,10 +283,10 @@ pair<int, int> findMinMaxElements(const set<int>& variables, const vector<vector
 
         for (int y : variables) {
             if (x != y) {
-                if (coNestedLessThanWithCurlyLineBelow(y, x, levels)) {
+                if (!coNestedLessThanWithCurlyLineBelow(x, y, levels)) {
                     isMinimal = false;
                 }
-                if (coNestedLessThanWithCurlyLineBelow(x, y, levels)) {
+                if (coNestedLessThanWithCurlyLineBelow(y, x, levels)) {
                     isMaximal = false;
                 }
             }
@@ -285,10 +294,12 @@ pair<int, int> findMinMaxElements(const set<int>& variables, const vector<vector
 
         if (isMinimal && (minElement == -1 || coNestedLessThanCompare(x, minElement))) {
             minElement = x;
+            printf("minElement: %i\n", minElement);
         }
 
         if (isMaximal && (maxElement == -1 || coNestedLessThanCompare(maxElement, x))) {
             maxElement = x;
+            printf("maxElement: %i\n", maxElement);
         }
     }
 
@@ -400,6 +411,10 @@ int f(int x, bool alpha, bool beta) {
                 // which has 4 cases
                 // the first elem of minMax is minimal element and the second is maximal element
                 pair<int, int> minMax = findMinMaxElements(triangleSet,X);
+                printf("triangle set: ");
+                for (int x : triangleSet) {
+                    printf("%i ", x);
+                }
                 printf("minMax: %i, %i\n", minMax.first, minMax.second);
                 for (bool alphaPrime : {true, false}) {
                     for (bool alphaDoublePrime : {true, false}) {
@@ -517,9 +532,21 @@ void conestedAlgorithm() {
 
     //Lemma 2.1: If var degree = 1, then theta' = theta - c_(x(1)) and M(theta) = M(theta') + 1
     // Therefore the clause is deleted from the cnf
-    M += removeLitsOccurringOnce();
-    
-    fillVarOccsArray();
+    bool removedelem = true;
+    while (removedelem)
+    {   
+        fillVarOccsArray();
+        pair<int,bool> removedElem = removeLitsOccurringOnce();
+        M += removedElem.first;
+        printf("M %i\n", M);
+        removedelem = removedElem.second;
+        if (M == numOfClauses)
+        {   
+            printf("M %i == numOfClauses %i\n", M, numOfClauses);
+            return;
+        }
+        
+    }
 
     varDegrees.resize(numOfVars + 1);
     fillDegreesforVars();
