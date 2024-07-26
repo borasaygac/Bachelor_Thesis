@@ -151,8 +151,8 @@ void fillDegreesforVars() {
 
 bool coNestedPrecedesCompare(int a, int b) {
     printf("Checking for a: %i, b: %i: n", a, b);
-    if ((coNestedVariableOccs[a][0] <= coNestedVariableOccs[b][0]) && 
-        (coNestedVariableOccs[b].back() <= coNestedVariableOccs[a].back())) {
+    if ((coNestedVariableOccs[b][0] <= coNestedVariableOccs[a][0]) && 
+        (coNestedVariableOccs[a].back() <= coNestedVariableOccs[b].back())) {
             printf("True\n");
             return true;
     }
