@@ -85,7 +85,7 @@ pair<int,bool> removeLitsOccurringOnce() {
     coNestedCNF = newCoNestedCNF;
 
     // Update the number of clauses
-    numOfClauses = coNestedCNF.size();
+    //numOfClauses = coNestedCNF.size();
 
     CNnumOfClauses -= removedClausesNumber;
     CNnumOfVars -= removedLitsNumber;
@@ -246,17 +246,6 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
         return false;
     }
 
-     // Check if x < y
-    if (!coNestedLessThanCompare(x, y)) {
-        printf("x %i is not less than y. %i\n",x,y);
-        return false;
-    }
-
-    // If both are on level 0, return true since they are comparable and there's no intermediate level
-    if (xlevel == 0 && ylevel == 0) {
-        return true;
-    }
-
     // Check for the intermediate variable z in the level just below xlevel
     const vector<int>& sublevel = levels[xlevel - 1];
     for (int z : sublevel) {
@@ -268,6 +257,21 @@ bool coNestedLessThanWithCurlyLineBelow(int x, int y, const vector<vector<int>>&
             }
         }
     }   
+
+    // If both are on level 0, return true since they are comparable and there's no intermediate level
+    if (xlevel == 0 && ylevel == 0) {
+        return true;
+    }
+
+     // Check if x < y
+    if (!coNestedLessThanCompare(x, y)) {
+        printf("x %i is not less than y. %i\n",x,y);
+        return false;
+    }
+
+    
+
+    
     
     return true;
 }
@@ -386,11 +390,14 @@ pair<int, int> findMinMaxInTriangle(int x, int i) {
 // Function to compute f(x, alpha, beta)
 int f(int x, bool alpha, bool beta) {
     int g(int x, int y, bool alpha, bool beta); // Forward declaration
-
+    printf("does this work\n");
     int currentMax = 0;
+    printf("degree of x: %i\n", varDegrees[x]);
 
-    for (int i = 1; i < varDegrees[x] - 1; i++) {
+    for (int i = 1; i <= varDegrees[x] - 1; i++) {
+        printf("in the first loop\n");
         for (int j = i + 1; j <= varDegrees[x]; j++) {
+            printf("in the second loop\n");
             set<int> triangleSet = defineTriangleSets(x, i, j);
             if (triangleSet.empty()) {
                 // if X(X,i) is empty, then f(x, alpha, beta) = theta(epsilon, alpha, beta)_i
@@ -399,6 +406,7 @@ int f(int x, bool alpha, bool beta) {
                     for (bool alpha : {true, false}) {
                         for (bool beta : {true, false}) {
                             int result = computeThetaEpsilon(x, epsilon, alpha, beta, i);
+                            printf("Test: %i\n", result);
                             if (result > currentMax) {
                                 currentMax = result;
                             }
@@ -420,31 +428,60 @@ int f(int x, bool alpha, bool beta) {
                     for (bool alphaDoublePrime : {true, false}) {
                         for (bool betaPrime : {true, false}) {
                             for (bool betaDoublePrime : {true, false}) {
-                                if (coNestedVariableOccs[x][i-1] == coNestedVariableOccs[minMax.first][0] && 
+                                printf("i: %i, j: %i\n", i, j);
+                               if (coNestedVariableOccs[x][i-1] == coNestedVariableOccs[minMax.first][0] && 
                                     coNestedVariableOccs[minMax.second].back() == coNestedVariableOccs[x][i]) {
-                                    int result =  g(minMax.first, minMax.second, alphaDoublePrime, betaDoublePrime) -
-                                                  (alphaDoublePrime && alphaPrime ? 1 : 0) -
-                                                  (betaDoublePrime && betaPrime ? 1 : 0);
+                                    
+                                    printf("Entering Case 1\n");
+                                    printf("coNestedVariableOccs[x][i-1]: %i, coNestedVariableOccs[minMax.first][0]: %i\n", coNestedVariableOccs[x][i-1], coNestedVariableOccs[minMax.first][0]);
+                                    printf("coNestedVariableOccs[minMax.second].back(): %i, coNestedVariableOccs[x][i]: %i\n", coNestedVariableOccs[minMax.second].back(), coNestedVariableOccs[x][i]);
+                                    
+                                    int result = g(minMax.first, minMax.second, alphaDoublePrime, betaDoublePrime) -
+                                                (alphaDoublePrime && alphaPrime ? 1 : 0) -
+                                                (betaDoublePrime && betaPrime ? 1 : 0);
+                                    
+                                    printf("Case 1 Result: %i\n", result);
                                     if (result > currentMax) {
                                         currentMax = result;
                                     }
                                 } else if (coNestedVariableOccs[x][i-1] < coNestedVariableOccs[minMax.first][0] && 
-                                           coNestedVariableOccs[minMax.second].back() == coNestedVariableOccs[x][i]){
+                                        coNestedVariableOccs[minMax.second].back() == coNestedVariableOccs[x][i]) {
+                                    
+                                    printf("Entering Case 2\n");
+                                    printf("coNestedVariableOccs[x][i-1]: %i, coNestedVariableOccs[minMax.first][0]: %i\n", coNestedVariableOccs[x][i-1], coNestedVariableOccs[minMax.first][0]);
+                                    printf("coNestedVariableOccs[minMax.second].back(): %i, coNestedVariableOccs[x][i]: %i\n", coNestedVariableOccs[minMax.second].back(), coNestedVariableOccs[x][i]);
+                                    
                                     int result = g(minMax.first, minMax.second, alphaPrime, betaDoublePrime) -
-                                                  (betaPrime && betaDoublePrime ? 1 : 0);
+                                                (betaPrime && betaDoublePrime ? 1 : 0);
+                                    
+                                    printf("Case 2 Result: %i\n", result);
                                     if (result > currentMax) {
                                         currentMax = result;
                                     }
                                 } else if (coNestedVariableOccs[x][i-1] == coNestedVariableOccs[minMax.first][0] &&
-                                           coNestedVariableOccs[minMax.second].back() < coNestedVariableOccs[x][i]) {
+                                        coNestedVariableOccs[minMax.second].back() < coNestedVariableOccs[x][i]) {
+                                    
+                                    printf("Entering Case 3\n");
+                                    printf("coNestedVariableOccs[x][i-1]: %i, coNestedVariableOccs[minMax.first][0]: %i\n", coNestedVariableOccs[x][i-1], coNestedVariableOccs[minMax.first][0]);
+                                    printf("coNestedVariableOccs[minMax.second].back(): %i, coNestedVariableOccs[x][i]: %i\n", coNestedVariableOccs[minMax.second].back(), coNestedVariableOccs[x][i]);
+                                    
                                     int result = g(minMax.first, minMax.second, alphaDoublePrime, betaPrime) - 
-                                                 (alphaPrime && alphaDoublePrime ? 1 : 0);
+                                                (alphaPrime && alphaDoublePrime ? 1 : 0);
+                                    
+                                    printf("Case 3 Result: %i\n", result);
                                     if (result > currentMax) {
                                         currentMax = result;
                                     }
-                                }  else if (coNestedVariableOccs[x][i-1] < coNestedVariableOccs[minMax.first][0] && 
-                                            coNestedVariableOccs[minMax.second].back() < coNestedVariableOccs[x][i]) {
+                                } else if (coNestedVariableOccs[x][i-1] < coNestedVariableOccs[minMax.first][0] && 
+                                        coNestedVariableOccs[minMax.second].back() < coNestedVariableOccs[x][i]) {
+                                    
+                                    printf("Entering Case 4\n");
+                                    printf("coNestedVariableOccs[x][i-1]: %i, coNestedVariableOccs[minMax.first][0]: %i\n", coNestedVariableOccs[x][i-1], coNestedVariableOccs[minMax.first][0]);
+                                    printf("coNestedVariableOccs[minMax.second].back(): %i, coNestedVariableOccs[x][i]: %i\n", coNestedVariableOccs[minMax.second].back(), coNestedVariableOccs[x][i]);
+                                    
                                     int result = g(minMax.first, minMax.second, alphaDoublePrime, betaDoublePrime);
+                                    
+                                    printf("Case 4 Result: %i\n", result);
                                     if (result > currentMax) {
                                         currentMax = result;
                                     }

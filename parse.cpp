@@ -1,11 +1,28 @@
 #include "parse.hpp"
 #include "clause.hpp"
 #include "dpdl.hpp"
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
 #include <cstring>
+#include <cstdlib> 
 
 using namespace std;
 
 // This function is dedicated to parse the DIMACS file.
+
+void checkFileStatus(std::ifstream& file, const std::string& filename) {
+    if (file.bad()) {
+        cerr << "Error reading file, badbit set on " << filename << ". Error no: " << strerror(errno) << std::endl;
+        std::exit(EXIT_FAILURE);
+    } else if (file.fail()) {
+        cerr << "Error reading file, failbit set on " << filename << ". Error no: " << strerror(errno) << std::endl;
+        std::exit(EXIT_FAILURE);
+    } else if (file.eof()) {
+        std::cerr << "Error reading file, eofbit set on " << filename << ". Error no: " << strerror(errno) << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+}
 
 bool parseDIMACS(std::string filename)
 {
@@ -38,8 +55,8 @@ bool parseDIMACS(std::string filename)
         // 4th elem of DIMACS is always the count of clauses,
         numOfClauses = stoi(tokens[3]);
 
-        //printf("Number of variables: %i\n", numOfVars);
-        //printf("Number of clauses: %i\n", numOfClauses);
+        printf("Number of variables: %i\n", numOfVars);
+        printf("Number of clauses: %i\n", numOfClauses);
 
         // Parse operations for the rest of the formula
 
@@ -122,13 +139,7 @@ bool parseDIMACS(std::string filename)
         //throw runtime_error("Failed to open file " + filename);
 
         // Check for specific error conditions
-        if (file.bad()) {
-            throw runtime_error("Error reading file, badbit set on " + filename + ". Error no: " + strerror(errno));
-        } else if (file.fail()) {
-            throw runtime_error("Error reading file, failbit set on " + filename);
-        } else if (file.eof()) {
-            throw runtime_error("Error reading file, eofbit set on " + filename);
-        }
+        checkFileStatus(file, filename);
         return false;
     }
 

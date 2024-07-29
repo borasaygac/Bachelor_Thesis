@@ -131,7 +131,18 @@ int main (int argc, char *argv[]) {
         
     } else if (conested) {
         // conested alg
-        conestedAlgorithm();
+        //conestedAlgorithm();
+        
+        pthread_t thread;
+
+        if (pthread_create(&thread, NULL, DPLL,NULL)) {
+        std::cerr << "Error: Unable to create thread."
+                  << "\n";
+        std::cout.flush();
+        return -1;
+        }
+
+        pthread_join(thread, NULL);
 
     } else {
         // Does not fit any of the above
