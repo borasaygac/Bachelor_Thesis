@@ -147,6 +147,16 @@ int main (int argc, char *argv[]) {
     } else {
         // Does not fit any of the above
 
+        pthread_t thread;
+
+        if (pthread_create(&thread, NULL, DPLL,NULL)) {
+        std::cerr << "Error: Unable to create thread."
+                  << "\n";
+        std::cout.flush();
+        return -1;
+        }
+
+        pthread_join(thread, NULL);
         // DPLL
         // Note: In this case call minisat
     }
@@ -160,12 +170,16 @@ int main (int argc, char *argv[]) {
 
     if (sat) {
         printf("The formula is SAT\n");
+        if (!(horn || twosat || nested || conested || nonInterlaced)) {
+            // DPLL
+            printf("However, does not fit any of the cases!\n");
+        }
     } else {
         if (horn || twosat || nested || conested || nonInterlaced) {
             printf("The formula is UNSAT\n");
         } else {
             // DPLL
-            printf("DOES NOT FIT ANY\n");
+            printf("And does not fit any of the cases!\n");
         }
     }
 
