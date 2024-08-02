@@ -84,10 +84,6 @@ int main (int argc, char *argv[]) {
     isFNonInterlaced(); // check if the formula is non-interlaced */
 
     // The big if-else block to determine which algorithm to use
-    horn = false;
-    twosat = false;
-    nested = false;
-    conested = true; 
     if (horn) {
         if (unitClauses.empty()){
             printf("No unit clauses!\n");
@@ -187,7 +183,7 @@ int main (int argc, char *argv[]) {
 
     // Call the python script to generate the graph for nested and co-nested
     if (nested) {
-        callPythonGraphScript(forGraphCoNestedCNF, numOfVars, numOfClauses, 'N');
+        callPythonGraphScript(nestedCNF, numOfVars, numOfClauses, 'N');
     }
 
     if (conested) {
