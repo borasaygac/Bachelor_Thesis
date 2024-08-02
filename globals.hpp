@@ -65,7 +65,11 @@ void copyCNF();
 
 extern vector<vector<int>> coNestedCNF;
 
-bool callPythonScript(vector<vector<int>>& coNestedCNF);
+extern vector<vector<int>> forGraphCoNestedCNF;
+
+bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF);
+
+void callPythonGraphScript(vector<vector<int>> gCNF,int numOfVars, int numOfClauses, char definingChar);
 
 void conestedAlgorithm();
 

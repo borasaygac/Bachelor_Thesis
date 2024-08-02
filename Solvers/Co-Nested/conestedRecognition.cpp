@@ -10,7 +10,7 @@ void copyCNF() {
     coNestedCNF = cnf;
 }
 
-bool callPythonScript(vector<vector<int>>& coNestedCNF) {
+bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF) {
     // Initialize the Python interpreter
     Py_Initialize();
 
@@ -18,7 +18,7 @@ bool callPythonScript(vector<vector<int>>& coNestedCNF) {
     const char* scriptName = "planarity_check";
     const char* functionName = "check_planarity_for_all_permutations";
 
-    //// Add the current directory and the Solvers/Co-Nested directory to the Python path
+    // Add the current directory and the Solvers/Co-Nested directory to the Python path
     PyRun_SimpleString("import sys");
     PyRun_SimpleString("sys.path.append(\".\")");
     PyRun_SimpleString("sys.path.append(\"Solvers/Co-Nested\")");

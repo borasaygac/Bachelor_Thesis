@@ -18,6 +18,7 @@ vector<vector<int>> cnf;
 int unitClauseCount = 0;
 vector<Clause> unitClauses;
 vector<pair<int,int>> deltaF;
+vector<vector<int>> forGraphCoNestedCNF;
 bool twosat = false;
 bool horn = false;
 bool nested = false;
@@ -73,13 +74,14 @@ int main (int argc, char *argv[]) {
 
     copyCNF();
     
-    conested = callPythonScript(coNestedCNF);
+    conested = callPlanarityPythonScript(coNestedCNF);
 
-    // Check if the formula is conested
+    // Save the Co-nested CNF permutation for the graph
+    forGraphCoNestedCNF = coNestedCNF;
 
     /* Check if the formula is non-interlaced
-    //createDeltaF(); // create deltaF vector
-    //isFNonInterlaced(); // check if the formula is non-interlaced */
+    createDeltaF(); // create deltaF vector
+    isFNonInterlaced(); // check if the formula is non-interlaced */
 
     // The big if-else block to determine which algorithm to use
     horn = false;
@@ -117,6 +119,7 @@ int main (int argc, char *argv[]) {
 
         nestedSolver();
 
+        // DPLL call for nested
         pthread_t thread;
 
         if (pthread_create(&thread, NULL, DPLL,NULL)) {
@@ -133,6 +136,7 @@ int main (int argc, char *argv[]) {
         // conested alg
         //conestedAlgorithm();
         
+        // DPLL call for co-nested
         pthread_t thread;
 
         if (pthread_create(&thread, NULL, DPLL,NULL)) {
@@ -181,6 +185,14 @@ int main (int argc, char *argv[]) {
 
     printf("-------------------------------------\n\n");
 
+    // Call the python script to generate the graph for nested and co-nested
+    if (nested) {
+        callPythonGraphScript(forGraphCoNestedCNF, numOfVars, numOfClauses, 'N');
+    }
+
+    if (conested) {
+        callPythonGraphScript(forGraphCoNestedCNF, numOfVars, numOfClauses, 'C');
+    }
 
     return 0;
 }

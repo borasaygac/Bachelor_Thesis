@@ -22,7 +22,7 @@ def construct_graph_from_cnf(cnf):
     clause_to_clause_edges = []
     for i in range(1, num_clauses):
         clause_to_clause_edges.append((i, i+1))
-        #print("Adding edge between", i, "and", i+1)
+        
 
     # Add clause-to-variable edges
     clause_to_var_edges = []
@@ -45,7 +45,7 @@ def construct_graph_from_cnf(cnf):
     # Check for planarity
     is_planar, _ = nx.check_planarity(G)
 
-    if is_planar:
+    """ if is_planar:
         pos = nx.planar_layout(G)
         plt.figure(figsize=(8, 8))
 
@@ -84,7 +84,7 @@ def construct_graph_from_cnf(cnf):
         pentagon = plt.Line2D([0], [0], marker='p', color='w', markerfacecolor='lightblue', markersize=10, label='Dummy Node')
         plt.legend(handles=[circle, square, pentagon, red_patch, blue_patch,green_patch], loc='upper right')
 
-        plt.show()
+        plt.show() """
      
     return is_planar
 
