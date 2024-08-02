@@ -49,8 +49,7 @@ bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF) {
             PyObject* pValue = PyObject_CallObject(pFunc, pArgs);
             Py_DECREF(pArgs);
             Py_DECREF(pList);
-
-
+            
             if (pValue != nullptr) {
                 // Convert the Python lis of list back to C++ vector of vectors
                 vector<vector<int>> result;
@@ -71,16 +70,15 @@ bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF) {
                             }
                         }
                     }
+                    coNestedCNF = result;
+
+                    return true;
                 }
-
-                coNestedCNF = result;
-
-                Py_DECREF(pValue);
-
             } else {
                 PyErr_Print();
                 std::cerr << "Failed to call the Python function." << std::endl;
             }
+            Py_DECREF(pValue);
             Py_XDECREF(pFunc);
         } else {
             if (PyErr_Occurred()) {
@@ -94,7 +92,7 @@ bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF) {
         std::cerr << "Failed to load the Python script." << std::endl;
     }
 
-    return true;
+    return false;
 }
 
 

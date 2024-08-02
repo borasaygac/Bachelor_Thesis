@@ -73,8 +73,6 @@ def draw_planar_graph(cnf, num_of_vars, num_of_clauses, defining_char):
         # Draw the clause to variable edges
         nx.draw_networkx_edges(G, pos, edgelist=clause_to_var_edges, edge_color='blue',
                 label='Clause to Variable Edges')
-        
-        print("Nodes in the graph G:", list(G.nodes))
 
         clause_node_list= [i for i in range(1, num_of_clauses+1)]
         nx.draw_networkx_nodes(G, pos, nodelist= clause_node_list, node_shape="s", node_color='red', node_size=600
@@ -104,7 +102,6 @@ def draw_planar_graph(cnf, num_of_vars, num_of_clauses, defining_char):
         square = plt.Line2D([0], [0], marker='s', color='w', markerfacecolor='red', markersize=10, label='Clauses')
 
         dummy_node_id = [num_of_clauses + num_of_vars + 1]
-        print(dummy_node_id)
         nx.draw_networkx_nodes(G, pos, nodelist=dummy_node_id, node_shape="p", node_color='green', node_size=600
                                ,label='Dummy Node')
         

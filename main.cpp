@@ -183,10 +183,12 @@ int main (int argc, char *argv[]) {
 
     // Call the python script to generate the graph for nested and co-nested
     if (nested) {
+        printf("Calling Python script for nested graph...\n");
         callPythonGraphScript(nestedCNF, numOfVars, numOfClauses, 'N');
     }
 
     if (conested) {
+        printf("Calling Python script for co-nested graph...\n");
         callPythonGraphScript(forGraphCoNestedCNF, numOfVars, numOfClauses, 'C');
     }
 
