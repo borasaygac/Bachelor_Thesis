@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import itertools
 
 def construct_graph_from_cnf(cnf):
+    
+
     G = nx.Graph()
 
     unique_variables = set()
@@ -48,6 +50,8 @@ def construct_graph_from_cnf(cnf):
     return is_planar[0]
 
 def check_planarity_for_all_permutations(cnf):
+    check_counter = 0
+
     # Pair each clause with its original index
     indexed_clauses = list(enumerate(cnf[1:], start=1))
     
@@ -57,12 +61,15 @@ def check_planarity_for_all_permutations(cnf):
 
         # Construct the graph with the permuted clauses
         is_planar = construct_graph_from_cnf(permutation)
+        check_counter += 1
 
         if is_planar:
             print("Co-Nested Recognition: Y\nReason: There exists a planar permutation.")
             result = [clause for idx, clause in permuted_indexed_clauses]
             result.insert(0, [])  # Insert an empty list at the beginning
+            print("Number of planarity checks:", check_counter)
             return result
     
     print("Co-Nested Recognition: N\nReason: There exists no planar permutation.")
+    print("Number of planarity checks:", check_counter)
     return False
