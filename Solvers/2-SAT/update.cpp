@@ -72,17 +72,12 @@ void update(int assertedVar) {
             for (int i = 0; i < clause->literals.size(); i++) {
                 if (vars[std::abs(clause->literals[i])].getValue() == FREE && 
                    !vars[std::abs(clause->literals[i])].getEnqueued()) {
-                    //printf("Pushing %i\n", clause->literals[i]);
                     toPropagate.push(clause->literals[i]);
                     vars[std::abs(clause->literals[i])].setEnqueued(true);
                 }
             }
         }
     }
-
-    //delete clausesToUpdate;
-
-    //delete clausesToMarkSatisfied;
 
     if (backtrackFlag) backtrack();
 

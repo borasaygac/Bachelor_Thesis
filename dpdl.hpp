@@ -1,3 +1,5 @@
+// This file holds the declarations of the functions used in the DPDL algorithm.
+
 #ifndef DPDL_HPP
 #define DPDL_HPP
 

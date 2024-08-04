@@ -2,8 +2,7 @@
 #include "../../dpdl.hpp"
 
 
-// Checks whether the formula is 2-SAT
-bool isTwoSat(int numOfClauses, vector<Clause> clauses) {
+bool isTwoSat(int numOfClauses, vector<Clause> clauses) { // Checks whether the formula is 2-SAT
 
     for (int i = 1; i <= numOfClauses; i++) {
         if (!clauses[i].IsClauseTwoSat(i)) {
@@ -30,8 +29,8 @@ bool isTwoSat(int numOfClauses, vector<Clause> clauses) {
     return true;
 }
 
-// Solves the 2-SAT formula -- main function 
-void* DPLL(void* arg) {
+
+void* DPLL(void* arg) { // Solves the 2-SAT formula -- main function 
     while (true) {
         propagate();
         chooseINC();
@@ -39,8 +38,7 @@ void* DPLL(void* arg) {
 }
 
 
-
-void chooseINC() {
+void chooseINC() { // Choose the next variable to assign -- Heuristic: incremental
     dc++;
     //printf("curvar: %i\n", curVar);
     while (vars[curVar].getValue() != FREE) curVar++;

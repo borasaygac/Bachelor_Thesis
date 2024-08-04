@@ -17,8 +17,8 @@ void propagate() {
         vars[absoluteProp].setEnqueued(false); // the variable is no longer enqueued
         vars[absoluteProp].setForced(true); // the variable is now forced because the assignment happened due to propagation of the chosen variable 
 
-        assig.push(absoluteProp);      // push the variable to the stack of assigned variables -- needed for backtrack
+        assig.push(absoluteProp); // push the variable to the stack of assigned variables -- needed for backtrack
         
-        update(absoluteProp);       // update the variables that are affected by the assignment of the variable
+        update(absoluteProp); // update the variables that are affected by the assignment of the variable
     }
 }
