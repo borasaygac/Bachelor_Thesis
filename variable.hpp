@@ -21,10 +21,10 @@ private:
     int pos_occ;
     int neg_occ;
     int tot_occ;
-    set<int> dynamicOccursPosInClauses; // initially a copy of occursPosInClauses. Needed for 2-SAT
+    set<int> dynamicOccursPosInClauses; // initially a copy of occursPosInClauses. Needed for DPll
     set<int> occursPosInClauses;
     set<int> occursNegInClauses;
-    set<int> dynamicOccursNegInClauses; // initially a copy of occursNegInClauses. Needed for 2-SAT
+    set<int> dynamicOccursNegInClauses; // initially a copy of occursNegInClauses. Needed for DPLL
     bool enqueued;
     bool forced;
 public:
@@ -37,7 +37,6 @@ public:
         forced = false;
     };
 
-    ~Variable();
     void setIndex(int i);
     int const getIndex() {return index;};
 
@@ -73,6 +72,4 @@ public:
     bool const getForced() {return forced;};
 };
 
-
 #endif // VARIABLE_HPP
-

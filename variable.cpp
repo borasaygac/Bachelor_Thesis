@@ -1,16 +1,6 @@
 #include "variable.hpp"
 #include <cstdlib>
 
-/*Variable::Variable(){ // constructor
-    this -> pos_occ = 0;
-    this -> neg_occ = 0;
-    this -> tot_occ = 0; 
-}*/
-
-Variable::~Variable(){ // destructor
-
-}
-
 void Variable::setIndex(int i) { // set the index of the variable (1-indexed to n= numOfVars) 
     this -> index = i;
 }

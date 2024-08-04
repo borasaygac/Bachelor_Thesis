@@ -71,8 +71,6 @@ bool parseDIMACS(std::string filename)
             vars[i].setValue(FREE);
         }
 
-        //printf("size of vars: %i\n", vars.size());
-
         for (int i = 0; i < numOfClauses + 1; i++){ // set the index of the clause (1-indexed to m = numOfClauses)
             clauses[i].setIndex(i);
         }
@@ -119,14 +117,11 @@ bool parseDIMACS(std::string filename)
         }
 
         for (int i = 1; i < numOfClauses + 1; i++) {
-            //printf("Clause %i: ", i);
             if (cnf[i].size() == 1) unitClauses.push_back(clauses[i]);
             for (int j = 0; j < cnf[i].size(); j++){
                  // add elements to the clause object
                 clauses[i].clauseAddElem(cnf[i][j]);
-                //printf("%i ", cnf[i][j]);
             }
-            //printf("\n");
         } 
 
         for (int i = 1; i <= numOfVars; i++) {
@@ -136,8 +131,6 @@ bool parseDIMACS(std::string filename)
         file.close();
     }
     else {
-        //throw runtime_error("Failed to open file " + filename);
-
         // Check for specific error conditions
         checkFileStatus(file, filename);
         return false;
