@@ -56,7 +56,7 @@ void createOrderedCNF() {
 bool isNested() {
     for (int i = 1; i < nestedCNF.size(); i++) {
         for (int j = i + 1; j < nestedCNF.size(); j++) {
-            if (doesClauseOneStraddleClauseTwo(nestedCNF[i], nestedCNF[j]) && doesClauseTwoStraddleClauseOne(nestedCNF[i], nestedCNF[j])) {
+            if (doesClauseOneStraddleClauseTwo(nestedCNF[i], nestedCNF[j]) && doesClauseOneStraddleClauseTwo(nestedCNF[j], nestedCNF[i])) {
                 printf("Nested Recognition: N \nThe formula is not nested because clause %i and clause %i overlap \n", i, j);
                 printf("Clause %i: [", i);
                 for (int k = 0; k < nestedCNF[i].size(); k++) {
@@ -98,26 +98,6 @@ bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseT
     
 }
 
-// This function is redundant and can be removed -- currently for debug purposes
-bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseTwo) {
-
-    for (int first = 0; first < clauseTwo.size(); ++first) {
-        for (int second = 0; second < clauseOne.size(); ++second) {
-            for (int third = clauseTwo.size() -1 ; third > first; third--) {
-                if (first == third) continue; // Ensure 'first' and 'third' are distinct
-                
-                if (nestedLessCompare(clauseTwo[first], clauseOne[second]) && nestedLessCompare(clauseOne[second], clauseTwo[third])) {
-                    // Uncomment the below lines to debug or understand the flow
-                    // printf("Clause 2 straddles Clause 1 because: \n");
-                    // printf("First: %i < Second: %i < Third: %i \n", clauseTwo[first], clauseOne[second], clauseTwo[third]);
-                    return true;
-                }
-            }
-        }
-    }
-    //printf("Clause 2 does not straddle Clause 1\n");
-    return false;
-}
 
 void fillLiteralsAndStart() {
     int startcounter = 0;

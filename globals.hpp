@@ -57,8 +57,6 @@ vector<int> nestedClausePreOrder(vector<int> &clause);
 
 bool doesClauseOneStraddleClauseTwo(vector<int> &clauseOne, vector<int> &clauseTwo);
 
-bool doesClauseTwoStraddleClauseOne(vector<int> &clauseOne, vector<int> &clauseTwo);
-
 // Co-Nested SAT Global Variables
 
 void copyCNF();
