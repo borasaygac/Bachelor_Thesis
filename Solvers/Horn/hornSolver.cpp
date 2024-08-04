@@ -1,6 +1,6 @@
 #include "../../globals.hpp"
 
-void const printHornClauses(bool horn) {   // Print the Horn clauses for debugging purposes
+void const printHornClauses(bool horn) {   // Print the non-Horn clauses for proof of Horn recognition 
 
     if (!horn) {
         printf("Horn Recognition: N\nReason: clause(s): ");

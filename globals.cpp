@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-bool isFormulaSat() {
+bool isFormulaSat() { // Check if the formula is satisfied and evaluate all clauses
     for (int i = 1; i <= numOfClauses; i++) {
         if (!clauses[i].evaluateClause()) {
             return false;
@@ -11,7 +11,7 @@ bool isFormulaSat() {
     return true;
 }
 
-void const printModel(bool sat) {
+void const printModel(bool sat) { // Print the model of the formula
   if (!sat) {
     printf("\033[31mUNSAT: No model!\033[0m\n\n");}
    else {

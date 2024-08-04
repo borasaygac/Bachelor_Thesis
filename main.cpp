@@ -10,6 +10,7 @@
 
 using namespace std;
 
+// General Global Variables
 int numOfVars = 0;
 int numOfClauses = 0;
 vector<Variable> vars;
@@ -17,14 +18,6 @@ vector<Clause> clauses;
 vector<vector<int>> cnf;
 int unitClauseCount = 0;
 vector<Clause> unitClauses;
-vector<pair<int,int>> deltaF;
-vector<vector<int>> forGraphCoNestedCNF;
-bool twosat = false;
-bool horn = false;
-bool nested = false;
-bool conested = false;
-bool nonInterlaced = false;
-
 
 // for 2 SAT and DPLL
 int numOfSatClauses = 0;
@@ -35,6 +28,18 @@ int btc = 0;
 stack<int> assig;
 queue<int> toPropagate;
 
+// Nested Global Variables
+vector<pair<int,int>> deltaF;
+
+// Co-nested Global Variables for graph drawing 
+vector<vector<int>> forGraphCoNestedCNF;
+
+// Flags
+bool twosat = false;
+bool horn = false;
+bool nested = false;
+bool conested = false;
+bool nonInterlaced = false;
 
 int main (int argc, char *argv[]) {
 
@@ -46,27 +51,22 @@ int main (int argc, char *argv[]) {
     // measure CPU time...
     chrono::steady_clock::time_point start = chrono::steady_clock::now();
 
+    // Call to the parser
     string fileName = argv[1];
-    try {
-        printf("Parsing file: %s\n\n", fileName.c_str());
-        parseDIMACS(fileName);
-    } catch (const std::runtime_error& e) {
-        cerr << "Error: " << e.what() << '\n';
-        // handle error 
-    }
+    printf("Parsing file: %s\n\n", fileName.c_str());
+    parseDIMACS(fileName);
 
     // Check if the formula is Horn 
     horn = isHornFormula(numOfClauses, clauses); 
 
-    printHornClauses(horn); // print the non-horn clauses if formula not horn (for DEBUG)
+    printHornClauses(horn); // print the non-horn clauses if formula not horn
 
     // Check if the formula is 2-SAT
-
     twosat = isTwoSat(numOfClauses, clauses);
 
     // Check if the formula is nested
 
-    createOrderedCNF(); 
+    createOrderedCNF(); // Creates a new CNF with the order introduced in the paper
 
     nested = isNested();
 
@@ -76,8 +76,7 @@ int main (int argc, char *argv[]) {
     
     conested = callPlanarityPythonScript(coNestedCNF);
 
-    // Save the Co-nested CNF permutation for the graph
-    forGraphCoNestedCNF = coNestedCNF;
+    forGraphCoNestedCNF = coNestedCNF; // Save the Co-nested CNF permutation for the graph
 
     /* Check if the formula is non-interlaced
     createDeltaF(); // create deltaF vector
@@ -85,16 +84,6 @@ int main (int argc, char *argv[]) {
 
     // The big if-else block to determine which algorithm to use
     if (horn) {
-        if (unitClauses.empty()){
-            printf("No unit clauses!\n");
-        } else {
-            printf("Unit Clause Count: %i\n", unitClauseCount);
-            printf("Unit Clauses: ");
-            for (Clause tmp_cls : unitClauses) {
-                printf("%i, ", tmp_cls.getIndex());
-            }
-        printf("\n");
-        }
         hornSolver();
     } else if (twosat) {
         // DPLL two sat
@@ -111,7 +100,7 @@ int main (int argc, char *argv[]) {
         
     } else if (nested) {
 
-        fillLiteralsAndStart();
+        fillLiteralsAndStart(); // Fills the occurrances of the literals and starting clauses for the nested algorithm
 
         nestedSolver();
 
@@ -127,10 +116,9 @@ int main (int argc, char *argv[]) {
 
         pthread_join(thread, NULL);
 
-        
     } else if (conested) {
-        // conested alg
-        //conestedAlgorithm();
+
+        //conestedAlgorithm(); 
         
         // DPLL call for co-nested
         pthread_t thread;
@@ -145,7 +133,7 @@ int main (int argc, char *argv[]) {
         pthread_join(thread, NULL);
 
     } else {
-        // Does not fit any of the above
+        // Does not fit any of the above therefore a universal DPLL call
 
         pthread_t thread;
 
@@ -157,14 +145,7 @@ int main (int argc, char *argv[]) {
         }
 
         pthread_join(thread, NULL);
-        // DPLL
-        // Note: In this case call minisat
     }
-    
-    //print var assigs
-    /*for (int i = 1; i <= numOfVars; i++) {
-        printf("Variable %i: %i\n", i, vars[i].getValue());
-    } */
 
     bool sat = isFormulaSat();
 
@@ -185,6 +166,7 @@ int main (int argc, char *argv[]) {
 
     chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
+    // Calculate total the CPU time used
     chrono::duration<double> duration = chrono::duration_cast<std::chrono::duration<double>>(end - start);
 
     printModel(sat);
@@ -196,6 +178,8 @@ int main (int argc, char *argv[]) {
     printf("-------------------------------------\n\n");
 
     // Call the python script to generate the graph for nested and co-nested
+    // These are after CPU time calculation to not interfere with the time
+    // Two seperate calls for nested and co-nested ensures that we get a graph for both
     if (nested) {
         printf("Calling Python script for nested graph...\n");
         callPythonGraphScript(nestedCNF, numOfVars, numOfClauses, 'N');
