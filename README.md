@@ -1,7 +1,5 @@
-# Thesis
-TODOS:
-- Co-Nested Alg finish
-- Seperate the graph drawing for co-nested until after the SAT result. Requires essentially rebuilding the code.
+# Bora Saygaç's Bachelor Thesis: Uniformly presenting some tractable cases
+This project was developed for my Bachelor's Thesis. It tries to shed some light on nested and co-nested formulas, however, does not try to be a universal SAT solver. It determines whether a given CNF formula is an element of class C, {2-SAT, Horn, Nested, Co-Nested}, solves them with the respective algorithm and draws the graphs for nested and co-nested formulas.
 
 Order of checking 
 1. Horn --implemented
