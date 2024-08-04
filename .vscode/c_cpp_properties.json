@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/Users/boras/AppData/Local/Programs/Python/Python312/include"
+                "C:/Users/boras/AppData/Local/Programs/Python/Python312/include",
+                "C:/Users/boras/AppData/Local/Programs/Python/Python312/libs"
             ],
             "defines": [
                 "_DEBUG",
