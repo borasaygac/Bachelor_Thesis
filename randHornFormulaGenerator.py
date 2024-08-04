@@ -1,5 +1,10 @@
 import random 
 
+# This function generates a random Horn formula with the given number of variables, clauses and maximum clause length
+# A Horn formula is a CNF formula where each clause contains at most one positive literal
+# The function returns a string in DIMACS CNF format
+# The function uses a weighted random choice to choose the length of each clause. This is especially important for unit clauses.
+
 def gen_rand_horn_formula(num_vars, num_clauses, max_clause_length): 
     variables = [f'{i}' for i in range(1, num_vars + 1)]
     formula = []
