@@ -11,7 +11,7 @@ This project was developed for my Bachelor's Thesis. It tries to shed some light
 - [ ] Pyhton ```itertools``` Library
 
 ### Required Changes to Makefile Before Running 
-Python/C API requires the full path of the ```libs``` and ```includes``` files. Therefore the following lines must be changed in the Makefile 
+Python/C API requires the full path of the ```libs``` and ```includes``` directories for your Python installation. Therefore the following lines must be changed in the Makefile 
 
 ```PYTHON_INCLUDE = <path-to-includes>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/include```
 ```PYTHON_LIB = <path-to-libs>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/libs```
@@ -26,12 +26,17 @@ For running, after compiling:
 
 Both relative and full paths are compatible when running.
 
+# Files and What They Do
+## Some Definitions 
+This project mainly concerns itself with nested, co-nested, and to some extent non-interlaced formulas. 
+For nested the definitions and algorithm from this paper [Knuth's Paper](https://arxiv.org/abs/cs/9301111) were implemented.
+For co-nested the work of Kratochvil and Krivanek [Co-nested Paper](https://link.springer.com/article/10.1007/BF01209713) was taken as basis. However, the solving algorithm proved challenging and is not reliable in our implemetation's current status. That is because it finds the minimal and maximal elements given the partial orders, which can be non-existant, causing crashes. Therefore a DPLL implementation has been used instead.The full code is still there.
+For non-interlaced, only the recognition algorithm is present. [Burckel's Paper](https://arxiv.org/abs/1803.10574)
 
-## Getting started
+Kratochvil and Krivanek defined a graph based approach where nested formulas need to be planar with a variable chain being outerplanar, and for co-nested planar with a clause chain to be outerplanar (see paper for more information). Those graphs are also being drawn if indeed nested or co-nested by ```draw_graph.py```.
+## Nested Formulas
+Their recognition and 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
 ## Add your files
 
