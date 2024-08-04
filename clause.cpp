@@ -5,12 +5,7 @@
 
 using namespace std;
 
-Clause::~Clause()
-{
-}
-
-
-void Clause::clauseAddElem(int v) {
+void Clause::clauseAddElem(int v) { // Add a literal to the clause
 
     this->elements.push_back(&vars[abs(v)]);
 
@@ -59,8 +54,7 @@ bool const Clause::evaluateClause() {
     return false;
 }
 
-// Check if the clause contains a literal v
-bool const Clause::contains(int v) {
+bool const Clause::contains(int v) { // Check if the clause contains a literal v
     for (int i = 0; i < this->elements.size(); i++) { // within the elements of the clause
         if (cnf[this->index][i] == v ) { // if the literal is found 
             // The signage has to match -> if v is positive, only query for positive v and not negative v

@@ -27,7 +27,6 @@ public:
         this->satisfiedBy = 0;
         this -> active = 0;
     };
-    ~Clause();
 
     void setIndex(int i) { index = i;};
     int const getIndex() { return index;};
@@ -44,7 +43,6 @@ public:
     bool IsClauseHorn(int index);
     bool const getIsHorn() { return isHorn;};
 
-
     bool IsClauseTwoSat(int index);
 
     bool const evaluateClause();
@@ -59,7 +57,5 @@ public:
 bool const isHornFormula(int numOfClauses, std::vector<Clause> clauses);
 
 void const printHornClauses(bool horn);
-
-
 
 #endif // CLAUSE_HPP
