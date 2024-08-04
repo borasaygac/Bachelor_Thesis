@@ -117,8 +117,14 @@ int main (int argc, char *argv[]) {
         pthread_join(thread, NULL);
 
     } else if (conested) {
-
-        //conestedAlgorithm(); 
+        /* int M = 0;
+        M = conestedAlgorithm(); 
+        if (M != numOfClauses) {
+            printf("Co-Nested Algorithm: Not Satisfiable.\nMaximum clauses satisfaible simultaneously: %d\n", M);
+            return 0;
+        } else {
+            printf("Co-Nested Algorithm: Satisfiable.\nMaximum clauses satisfaible simultaneously: %d\n", M);
+        } */
         
         // DPLL call for co-nested
         pthread_t thread;

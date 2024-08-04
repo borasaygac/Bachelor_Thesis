@@ -71,7 +71,7 @@ bool callPlanarityPythonScript(vector<vector<int>>& coNestedCNF);
 
 void callPythonGraphScript(vector<vector<int>> gCNF,int numOfVars, int numOfClauses, char definingChar);
 
-void conestedAlgorithm();
+int conestedAlgorithm();
 
 extern vector<vector<int>> coNestedVariableOccs;
 
