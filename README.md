@@ -4,11 +4,27 @@ This project was developed for my Bachelor's Thesis. It tries to shed some light
 # Usage
 ### Required Libraries 
 - [ ] G++ Compiler (c++ 17)
-- [ ] Python 3.12 (we have not tested with previous version)
+- [ ] Python 3.12 (not tested with previous version)
 - [ ] Python/C API
 - [ ] Python ```networkx``` Library
 - [ ] Pyhton ```matplotlib``` Library (```matplotlib.pyplot``` specifically)
 - [ ] Pyhton ```itertools``` Library
+
+### Required Changes to Makefile Before Running 
+Python/C API requires the full path of the ```libs``` and ```includes``` files. Therefore the following lines must be changed in the Makefile 
+
+```PYTHON_INCLUDE = <path-to-includes>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/include```
+```PYTHON_LIB = <path-to-libs>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/libs```
+```PYTHON_VERSION = <xxx>``` such as ```312``` for Python 3.12
+
+## Complining and Running 
+Compiling is pretty straightforward. In the base directory give the command:
+```make```
+
+For running, after compiling:
+```./main <path-to-CNF-file>```
+
+Both relative and full paths are compatible when running.
 
 
 ## Getting started
