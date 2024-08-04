@@ -3,12 +3,12 @@ This project was developed for my Bachelor's Thesis. It tries to shed some light
 
 # Usage
 ### Required Libraries 
-- [] G++ Compiler (c++ 17)
-- [] Python 3.12 (we have not tested with previous version)
-- [] Python/C API
-- [] Python ```networkx``` Library
-- [] Pyhton ```matplotlib``` Library (```matplotlib.pyplot``` specifically)
-- [] Pyhton ```itertools``` Library
+- [ ] G++ Compiler (c++ 17)
+- [ ] Python 3.12 (we have not tested with previous version)
+- [ ] Python/C API
+- [ ] Python ```networkx``` Library
+- [ ] Pyhton ```matplotlib``` Library (```matplotlib.pyplot``` specifically)
+- [ ] Pyhton ```itertools``` Library
 
 
 ## Getting started
