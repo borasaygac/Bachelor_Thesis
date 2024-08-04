@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import itertools
 
 def draw_planar_graph(cnf, num_of_vars, num_of_clauses, defining_char):
 

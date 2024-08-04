@@ -1,4 +1,4 @@
-CXXFLAGS = -Wall -fdiagnostics-color=always -Wno-sign-compare -Wno-format -g -O3
+CXXFLAGS = -Wall -std=c++17 -fdiagnostics-color=always -Wno-sign-compare -Wno-format -g -O3
 PYTHON_INCLUDE = C:/Users/boras/AppData/Local/Programs/Python/Python312/include
 PYTHON_LIB = C:/Users/boras/AppData/Local/Programs/Python/Python312/libs
 PYTHON_VERSION = 312

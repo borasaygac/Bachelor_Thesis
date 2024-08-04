@@ -1,12 +1,14 @@
 # Bora Saygaç's Bachelor Thesis: Uniformly presenting some tractable cases
 This project was developed for my Bachelor's Thesis. It tries to shed some light on nested and co-nested formulas, however, does not try to be a universal SAT solver. It determines whether a given CNF formula is an element of class C, {2-SAT, Horn, Nested, Co-Nested}, solves them with the respective algorithm and draws the graphs for nested and co-nested formulas.
 
-Order of checking 
-1. Horn --implemented
-2. 2-SAT -- implemented
-3. Nested -- next to be implemented
-4. CoNested
-5. Non Interlaced
+# Usage
+### Required Libraries 
+- [] G++ Compiler (c++ 17)
+- [] Python 3.12 (we have not tested with previous version)
+- [] Python/C API
+- [] Python ```networkx``` Library
+- [] Pyhton ```matplotlib``` Library (```matplotlib.pyplot``` specifically)
+- [] Pyhton ```itertools``` Library
 
 
 ## Getting started

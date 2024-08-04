@@ -1,5 +1,4 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 import itertools
 
 def construct_graph_from_cnf(cnf):
