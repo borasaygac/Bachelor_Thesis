@@ -14,15 +14,23 @@ This project was developed for my Bachelor's Thesis. It tries to shed some light
 Python/C API requires the full path of the ```libs``` and ```includes``` directories for your Python installation. Therefore the following lines must be changed in the Makefile 
 
 ```PYTHON_INCLUDE = <path-to-includes>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/include```
+
 ```PYTHON_LIB = <path-to-libs>``` such as ```C:/Users/user/AppData/Local/Programs/Python/Python312/libs```
+
 ```PYTHON_VERSION = <xxx>``` such as ```312``` for Python 3.12
 
 ## Complining and Running 
 Compiling is pretty straightforward. In the base directory give the command:
+
 ```make```
 
-For running, after compiling:
+For running, after compiling for the cases of 2-SAT,Horn and Nested:
+
 ```./main <path-to-CNF-file>```
+
+Optionally, to check for co-nested as well (**see Some Definitions part about the warning**) one can use the ```-cn``` flag.
+
+```./main <path-to-CNF-file> -cn```
 
 Both relative and full paths are compatible when running.
 
@@ -35,7 +43,9 @@ For co-nested the work of Kratochvil and Krivanek [Co-nested Paper](https://link
 
 For non-interlaced, only the recognition algorithm is present. [Burckel's Paper](https://arxiv.org/abs/1803.10574)
 
-Kratochvil and Krivanek defined a graph based approach where nested formulas need to be planar with a variable chain being outerplanar, and for co-nested planar with a clause chain to be outerplanar (see paper for more information). Those graphs are also being drawn if indeed nested or co-nested by ```draw_graph.py```. Warning! As co-nested formulas have a planirity condition, and only one of it's ordering needs to fullfill that. In the worst case O(m!(V+E)) checks need to be done where m is the number of clause, V vertices on the graph, E the number of edges in the graph. M is the defining factor here, since as early as 8 clauses 40 thousand checks need to be done. At 10 clauses that number becomes 3.6 million. So the algorithm does not scale well.
+Kratochvil and Krivanek defined a graph based approach where nested formulas need to be planar with a variable chain being outerplanar, and for co-nested planar with a clause chain to be outerplanar (see paper for more information). Those graphs are also being drawn if indeed nested or co-nested by ```draw_graph.py```.
+
+**WARNING!** As co-nested formulas have a planirity condition, and only one of it's ordering needs to fullfill that. In the worst case O(m!(V+E)) checks need to be done where m is the number of clause, V vertices on the graph, E the number of edges in the graph. M is the defining factor here, since as early as 8 clauses 40 thousand checks need to be done. At 10 clauses that number becomes 3.6 million. So the algorithm does not scale well. Therefore I have built the optional co-nested check.
 
 ## Base Directory
 In the base directory mostly classes of structures can be found, for clauses, variables, parsing in the ```.cpp``` and ```.hpp``` files respectively. The main function is present as well. 
