@@ -42,6 +42,7 @@ bool conested = false;
 bool nonInterlaced = false;
 
 int main (int argc, char *argv[]) {
+    bool checkCoNested = false; // Controls the optional check for co-nested
 
     if (argc < 2 ){
         cerr << "\nUsage: " << argv[0] << " <filename>\n" << "Please add a file when calling the main.exe!\n" << endl;
@@ -55,6 +56,19 @@ int main (int argc, char *argv[]) {
     string fileName = argv[1];
     printf("Parsing file: %s\n\n", fileName.c_str());
     parseDIMACS(fileName);
+
+    if (argc == 3) {
+        if (string(argv[2]) == "-cn") {
+            checkCoNested = true;
+        }
+    }
+    printf("The arg number is: %d\n", argc);
+    for (int i = 1; i < argc; ++i) {
+        string arg = argv[i];
+        printf("Argument %d: %s\n", i, arg.c_str());
+    }
+
+
 
     // Check if the formula is Horn 
     horn = isHornFormula(numOfClauses, clauses); 
@@ -72,11 +86,14 @@ int main (int argc, char *argv[]) {
 
     // Check if the formula is co-nested
 
-    copyCNF();
+    if (checkCoNested) { // Optional check for co-nested
+        copyCNF();
     
-    conested = callPlanarityPythonScript(coNestedCNF);
+        conested = callPlanarityPythonScript(coNestedCNF);
 
-    forGraphCoNestedCNF = coNestedCNF; // Save the Co-nested CNF permutation for the graph
+        forGraphCoNestedCNF = coNestedCNF; // Save the Co-nested CNF permutation for the graph
+    }
+    
 
     /* Check if the formula is non-interlaced
     createDeltaF(); // create deltaF vector
