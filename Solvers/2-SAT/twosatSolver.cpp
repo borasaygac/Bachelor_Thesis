@@ -20,12 +20,12 @@ bool isTwoSat(int numOfClauses, vector<Clause> clauses) { // Checks whether the 
                     printf("%i", nontwoSATclause[j]);
                 }
             }
-            printf("] is not 2-SAT.\n");
+            printf("] is not 2-SAT.\n\n");
             printf("\n");
             return false;
         }
     }
-    printf("2-SAT Recognition: Y\nReason: all clauses are 2-SAT.\n");
+    printf("2-SAT Recognition: Y\nReason: all clauses are 2-SAT.\n\n");
     return true;
 }
 

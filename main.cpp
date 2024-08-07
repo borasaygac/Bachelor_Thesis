@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
 
     // Call to the parser
     string fileName = argv[1];
-    printf("Parsing file: %s\n\n", fileName.c_str());
+    printf("\nParsing file: %s\n\n", fileName.c_str());
     parseDIMACS(fileName);
 
     if (argc == 3) {
@@ -62,13 +62,6 @@ int main (int argc, char *argv[]) {
             checkCoNested = true;
         }
     }
-    printf("The arg number is: %d\n", argc);
-    for (int i = 1; i < argc; ++i) {
-        string arg = argv[i];
-        printf("Argument %d: %s\n", i, arg.c_str());
-    }
-
-
 
     // Check if the formula is Horn 
     horn = isHornFormula(numOfClauses, clauses); 

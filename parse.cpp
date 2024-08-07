@@ -56,7 +56,7 @@ bool parseDIMACS(std::string filename)
         numOfClauses = stoi(tokens[3]);
 
         printf("Number of variables: %i\n", numOfVars);
-        printf("Number of clauses: %i\n", numOfClauses);
+        printf("Number of clauses: %i\n\n", numOfClauses);
 
         // Parse operations for the rest of the formula
 

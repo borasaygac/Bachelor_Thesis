@@ -64,6 +64,22 @@ In ```/Solvers/Nested``` the recognition, the pre-ordering, and the solving algo
 ## Example CNFs
 Some example CNFs from SAT 2006 Competition, some created by the random Horn generator, 1 nested (which is also co-nested) example, and some base (relatively small and easy) CNFs.
 
+### Known Nested Formulas
+#### EasyCNFs
+* 000_testunit.cnf
+* 012_nop2_u.cnf
+* 013_nop_u.cnf
+* 030_xor_s.cnf
+
+#### HornCNFs
+None found.
+
+#### NestedCNFs
+* 000_nested.cnf
+
+#### SAT06CompetitionCNFs
+None found.
+
 # Final Remarks
 
 I would like to sincerely thank Dr Jan Johannsen for his help, guidance, and mentorship throughout this project, thesis, and his teaching in the SAT Solving class. 
