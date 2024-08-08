@@ -52,6 +52,8 @@ In the base directory mostly classes of structures can be found, for clauses, va
 
 ```randHornFormulaGenerator.py``` generates random Horn formulas with weighted choice mechanicm regarding the lenght of the clauses. To run this file: ```python randHornFormulaGenerator.py```. You will be asked to input the number of variables, clauses, and maximum clause lenght. Then a Horn formula is generated and printed into the terminal.
 
+Note: One can find a ```cdcl.exe```file. This file is added to increase the speed of solving the non-tractable cases.
+
 ## Under ```/Solvers```
 In ```/Solvers/2-SAT``` our implementation of DPLL algorithm. Credit to Lemar Abawi as we have implemented this algorithm together for the class Sat Solvign in WS 23/24.
 

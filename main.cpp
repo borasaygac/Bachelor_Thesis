@@ -149,18 +149,14 @@ int main (int argc, char *argv[]) {
         pthread_join(thread, NULL);
 
     } else {
-        // Does not fit any of the above therefore a universal DPLL call
+        // Does not fit any of the above therefore a universal CDCL call
 
-        pthread_t thread;
-
-        if (pthread_create(&thread, NULL, DPLL,NULL)) {
-        std::cerr << "Error: Unable to create thread."
-                  << "\n";
-        std::cout.flush();
-        return -1;
+        std::string command = "cdcl.exe " + fileName;
+        int ret = system(command.c_str());
+        if (ret != 0) {
+            printf("Error: CDCL call failed!\n");
+            return -1;
         }
-
-        pthread_join(thread, NULL);
     }
 
     bool sat = isFormulaSat();
@@ -184,8 +180,10 @@ int main (int argc, char *argv[]) {
 
     // Calculate total the CPU time used
     chrono::duration<double> duration = chrono::duration_cast<std::chrono::duration<double>>(end - start);
-
-    printModel(sat);
+    if (horn || twosat || nested || conested) {
+        printModel(sat);
+    }
+    
 
     printf("\nCPU time used: %.6f seconds\n\n", duration.count());
 
